@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aifurion.blog.mapper.UserMapper">
+
+
+    <select id="findUserByUsername" parameterType="string" resultType="User">
+
+        select *
+        from t_user
+        where username = #{userName};
+
+    </select>
+
+
+    <insert id="saveAccount" parameterType="User" keyProperty="id" useGeneratedKeys="true">
+        insert into t_user
+        values (#{id}, #{username}, #{password}, #{salt});
+
+    </insert>
+
+
+    <resultMap id="userMap" type="User">
+        <id column="uid" property="id"/>
+        <result column="uname" property="username"/>
+        <collection property="roles" javaType="list" ofType="com.aifurion.blog.entity.Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="findRolesByUsername" parameterType="string" resultMap="userMap">
+
+        select u.id       uid,
+               u.username uname,
+               r.id       rid,
+               r.name     rname
+        from t_user u
+                 left join t_user_role ur on u.id = ur.userid
+                 left join t_role r on ur.roleid = r.id
+        where u.username = #{userName}
+
+    </select>
+
+
+    <select id="findPermissionByRoleId" parameterType="string" resultType="Permission">
+
+        select p.id,
+               p.name,
+               p.url
+        from t_role r
+                 left join t_role_permission rp on r.id = rp.roleid
+                 left join t_permission p on rp.permissionid = p.id
+        where r.id = #{id};
+
+    </select>
+
+
+</mapper>

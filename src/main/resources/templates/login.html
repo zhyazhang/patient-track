@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<h1>login page</h1>
+
+<form action="/user/login" method="post">
+
+    用户名：<input type="text" name="username"><br/>
+    密 码：<input type="text" name="password"><br/>
+    <!-- 请输入验证码：<input type="text" name="code"><img th:src="@{/codeimg}" alt=""><br/>-->
+    <input type="submit" value="登录">
+</form>
+
+<a href="/user/register">没有密码？请注册</a>
+
+</body>
+</html>
