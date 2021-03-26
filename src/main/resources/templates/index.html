@@ -4,41 +4,90 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Blog</title>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/clickJS.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/slide.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/flat-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/jquery.nouislider.css">
+
+
+    <script>
+
+        $(function () {
+            $('.meun-item-active').click();
+        });
+
+    </script>
 </head>
 <body>
-<h1>受限页面</h1>
-<a href="/user/logout">退出登录</a>
+<div id="wrap">
+    <!-- 左侧菜单栏目块 -->
+    <div class="leftMeun" id="leftMeun">
+        <div id="logoDiv">
+            <p id="logoP">
+                <img
+                        id="logo"
+                        alt="左右结构项目"
+                        onclick=location.reload(true)
+                        src="/images/logo.png">
+                <span>Blog</span>
+            </p>
+        </div>
+        <div id="personInfor">
+            <p th:text="${username}"></p>
+            <p>
+                <a href="/auth/logout">退出登录</a>
+            </p>
+        </div>
+        <div class="meun-title">账号管理</div>
+        <div class="meun-item meun-item-active" value="/account/personal" role="tab" data-toggle="tab">
+            <img src="/images/icon_source.png">个人信息
+        </div>
+        <div class="meun-item " value="/account/homepage" role="tab" data-toggle="tab">
+            <img src="/images/icon_chara_grey.png">个人主页
+        </div>
 
-<ul>
+        <div class="meun-title">文章管理</div>
+        <div class="meun-item " value="/article/list" role="tab" data-toggle="tab">
+            <img src="/images/icon_house_grey.png">文章列表
+        </div>
+        <div class="meun-item " value="/article/publish" role="tab" data-toggle="tab">
+            <img src="/images/icon_rule_grey.png">发表文章
+        </div>
 
-    <shiro:hasAnyRoles name="admin,worker,product">
-        <li><a href="">用户管理</a>
-            <ul>
-                <shiro:hasPermission name="user:add:*">
-                    <li><a href="">添加</a></li>
-                </shiro:hasPermission>
-                <shiro:hasPermission name="user:delete:*">
-                    <li><a href="">删除</a></li>
-                </shiro:hasPermission>
-                <shiro:hasPermission name="product:*:*">
-                    <li><a href="">产品</a></li>
-                </shiro:hasPermission>
 
-            </ul>
-        </li>
-    </shiro:hasAnyRoles>
+        <div class="meun-title">用户管理</div>
+        <div class="meun-item " value="/user/manage" role="tab" data-toggle="tab">
+            <img src="/images/icon_char_grey.png">用户管理
+        </div>
 
-    <shiro:hasRole name="admin">
-        <li><a href="">商品管理</a></li>
-        <li><a href="">订单管理</a></li>
-        <li><a href="">物流管理</a></li>
-    </shiro:hasRole>
+        <div class="meun-title">栏目管理</div>
 
-</ul>
+        <div class="meun-item " value="/programa/programa" role="tab" data-toggle="tab">
+            <img src="/images/icon_card_grey.png">栏目管理
+        </div>
+
+    </div>
+    <!-- 右侧具体内容栏目 -->
+    <div id="rightContent">
+
+    </div>
+
+
+</div>
 </body>
+
 </html>

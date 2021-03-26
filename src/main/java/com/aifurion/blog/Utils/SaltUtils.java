@@ -12,11 +12,10 @@ import java.util.Random;
 public class SaltUtils {
 
     /**
-     * 随机盐工具类
-     *
-     *
-     * @param n
-     * @return
+     * @author: zzy
+     * @description: 产生随机盐工具类
+     * @date: 2021/3/23 20:12
+     * @Param: null
      */
     public static String getSalt(int n) {
         char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()".toCharArray();

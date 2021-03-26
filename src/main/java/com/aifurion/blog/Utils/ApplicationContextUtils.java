@@ -14,6 +14,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationContextUtils implements ApplicationContextAware {
 
+    /**
+     * @author: zzy
+     * @description: 获取bean工具类
+     * @date: 2021/3/23 20:12
+     * @Param: null
+     */
+
     private static ApplicationContext context;
 
     @Override

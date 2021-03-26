@@ -1,5 +1,6 @@
 package com.aifurion.blog.controller;
 
+import com.aifurion.blog.common.AjaxResult;
 import com.aifurion.blog.entity.User;
 import com.aifurion.blog.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -12,18 +13,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.constraints.NotNull;
 
 /**
  * @author ：zzy
- * @description：TODO
+ * @description：登录授权等
  * @date ：2021/3/22 20:04
  */
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/auth")
+public class AuthController {
 
     @Autowired
     private UserService userService;
@@ -36,6 +38,15 @@ public class UserController {
 
     }
 
+
+    @GetMapping("/index")
+    public String getIndex() {
+
+        return "index";
+
+    }
+
+
     @PostMapping("/login")
     public String login(@NotNull String username, @NotNull String password) {
 
@@ -43,7 +54,7 @@ public class UserController {
 
             Subject subject = SecurityUtils.getSubject();
             subject.login(new UsernamePasswordToken(username, password));
-            System.out.println("login success");
+
 
 
             return "index";
@@ -72,16 +83,40 @@ public class UserController {
     @GetMapping("/register")
     public String getRegister() {
 
+
         return "register";
     }
 
 
+    @ResponseBody
     @PostMapping("/register")
-    public String register(User user) {
+    public AjaxResult register(User user) {
 
+        System.out.println(user + "-------------");
 
         try {
             userService.registerAccount(user);
+
+            System.out.println(AjaxResult.success());
+            return AjaxResult.success();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return AjaxResult.error();
+        }
+    }
+
+
+
+
+/*
+    @PostMapping("/register")
+    public String register(User usermanage) {
+
+
+        try {
+            userService.registerAccount(usermanage);
             return "login";
 
         } catch (Exception e) {
@@ -90,7 +125,7 @@ public class UserController {
             return "register";
         }
 
-    }
+    }*/
 
 
     @GetMapping("/logout")
@@ -103,7 +138,12 @@ public class UserController {
     }
 
 
+    @GetMapping("/test")
+    public String test() {
 
+        return "char";
+
+    }
 
 
 }

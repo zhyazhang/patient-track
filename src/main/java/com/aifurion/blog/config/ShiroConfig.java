@@ -25,7 +25,6 @@ public class ShiroConfig {
 
 
     /**
-     *
      * 创建shiroFilter负责拦截请求
      *
      * @param securityManager
@@ -41,10 +40,19 @@ public class ShiroConfig {
         Map<String, String> map = new HashMap<>();
 
         /*
-        排除
+        排除用户操作项
          */
-        map.put("/user/login", "anon");
-        map.put("/user/register", "anon");
+        map.put("/auth/login", "anon");
+        map.put("/auth/register", "anon");
+        map.put("/auth/test", "anon");
+
+        /*
+        排除静态资源
+         */
+        map.put("/css/**", "anon");
+        map.put("/images/**", "anon");
+        map.put("/js/**", "anon");
+        map.put("/fonts/**", "anon");
 
         /*
 
@@ -53,10 +61,12 @@ public class ShiroConfig {
         /view/author_name/page_id
 
          */
-        map.put("/view/**","anon");
+        map.put("/view/**", "anon");
+
+
         map.put("/**", "authc");
 
-        shiroFilterFactoryBean.setLoginUrl("/user/login");
+        shiroFilterFactoryBean.setLoginUrl("/auth/login");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;
 
@@ -64,9 +74,9 @@ public class ShiroConfig {
 
 
     /**
-     *
-     *创建安全管理器
+     * 创建安全管理器
      * 使用自定义realm
+     *
      * @param realm
      * @return
      */
@@ -84,8 +94,8 @@ public class ShiroConfig {
 
 
     /**
-     *
      * 创建自定义realm
+     *
      * @return
      */
 
@@ -119,7 +129,6 @@ public class ShiroConfig {
 
 
     /**
-     *
      * 添加thymeleaf对shiro的支持
      *
      * @return
@@ -129,8 +138,6 @@ public class ShiroConfig {
 
         return new ShiroDialect();
     }
-
-
 
 
 }
