@@ -2,6 +2,7 @@ package com.aifurion.blog.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.aifurion.blog.shiro.CustomRealm;
+import com.aifurion.blog.shiro.cache.RedisCacheManager;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -45,6 +46,8 @@ public class ShiroConfig {
         map.put("/auth/login", "anon");
         map.put("/auth/register", "anon");
         map.put("/auth/test", "anon");
+        map.put("/auth/isOnline", "anon");
+        map.put("/auth/ifUsernameExit", "anon");
 
         /*
         排除静态资源
@@ -53,6 +56,7 @@ public class ShiroConfig {
         map.put("/images/**", "anon");
         map.put("/js/**", "anon");
         map.put("/fonts/**", "anon");
+        map.put("/editormd/**", "anon");
 
         /*
 
@@ -106,23 +110,33 @@ public class ShiroConfig {
 
 
         /*
-
           修改默认凭证匹配器
-
          */
 
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
 
 
         /*
-
         MD5加密，迭代1024次
-
          */
 
         credentialsMatcher.setHashAlgorithmName("MD5");
         credentialsMatcher.setHashIterations(1024);
         customRealm.setCredentialsMatcher(credentialsMatcher);
+
+
+        /**
+         * redis缓存
+         *
+         */
+
+        customRealm.setCacheManager(new RedisCacheManager());
+        customRealm.setCachingEnabled(true);
+        customRealm.setAuthenticationCachingEnabled(true);
+        customRealm.setAuthenticationCacheName("authenticationCache");
+        customRealm.setAuthorizationCachingEnabled(true);
+        customRealm.setAuthorizationCacheName("authorizationCache");
+
         return customRealm;
 
     }

@@ -160,4 +160,56 @@ public class AjaxResult extends HashMap<String, Object> {
     }
 
 
+
+    /**
+     * 返回状态消息
+     *
+     * @return 状态消息
+     */
+    public static AjaxResult status() {
+        return status("状态");
+    }
+
+    /**
+     * 返回状态数据
+     *
+     * @return 状态消息
+     */
+    public static AjaxResult status(Object data) {
+        return status("状态", data);
+    }
+
+    /**
+     * 返回状态消息
+     *
+     * @param msg 返回内容
+     * @return 状态消息
+     */
+    public static AjaxResult status(String msg) {
+        return status(msg, null);
+    }
+
+    /**
+     * 返回成功消息
+     *
+     * @param msg  返回内容
+     * @param data 数据对象
+     * @return 状态消息
+     */
+    public static AjaxResult status(String msg, Object data) {
+        return new AjaxResult(CodeType.STATUS, msg, data);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

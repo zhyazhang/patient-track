@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.aifurion.blog.mapper.UserMapper">
+<mapper namespace="com.aifurion.blog.mapper.AuthMapper">
 
 
     <select id="findUserByUsername" parameterType="string" resultType="User">
@@ -14,7 +14,7 @@
 
     <insert id="saveAccount" parameterType="User" keyProperty="id" useGeneratedKeys="true">
         insert into t_user
-        values (#{id}, #{username}, #{password}, #{salt});
+        values (#{id}, #{username},null, #{password}, #{salt},null,null,null,#{regTime});
 
     </insert>
 

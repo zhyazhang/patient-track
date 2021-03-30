@@ -28,7 +28,9 @@
 
         $(function () {
             $('.meun-item-active').click();
+
         });
+
 
     </script>
 </head>
@@ -47,18 +49,20 @@
             </p>
         </div>
         <div id="personInfor">
-            <p th:text="${username}"></p>
             <p>
                 <a href="/auth/logout">退出登录</a>
             </p>
         </div>
         <div class="meun-title">账号管理</div>
-        <div class="meun-item meun-item-active" value="/account/personal" role="tab" data-toggle="tab">
-            <img src="/images/icon_source.png">个人信息
-        </div>
-        <div class="meun-item " value="/account/homepage" role="tab" data-toggle="tab">
+
+        <div class="meun-item meun-item-active" value="/account/homepage" role="tab" data-toggle="tab">
             <img src="/images/icon_chara_grey.png">个人主页
         </div>
+
+        <div class="meun-item" value="/account/personal" role="tab" data-toggle="tab">
+            <img src="/images/icon_source.png">个人信息
+        </div>
+
 
         <div class="meun-title">文章管理</div>
         <div class="meun-item " value="/article/list" role="tab" data-toggle="tab">
@@ -69,10 +73,15 @@
         </div>
 
 
-        <div class="meun-title">用户管理</div>
-        <div class="meun-item " value="/user/manage" role="tab" data-toggle="tab">
-            <img src="/images/icon_char_grey.png">用户管理
-        </div>
+        <shiro:hasRole name="admin">
+
+            <div class="meun-title">用户管理</div>
+            <div class="meun-item " value="/user/manage" role="tab" data-toggle="tab">
+                <img src="/images/icon_char_grey.png">用户管理
+            </div>
+
+        </shiro:hasRole>
+
 
         <div class="meun-title">栏目管理</div>
 
@@ -81,6 +90,8 @@
         </div>
 
     </div>
+
+
     <!-- 右侧具体内容栏目 -->
     <div id="rightContent">
 

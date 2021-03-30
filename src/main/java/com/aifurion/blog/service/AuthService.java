@@ -10,13 +10,13 @@ import java.util.List;
  * @description：TODO
  * @date ：2021/3/23 9:27
  */
-public interface UserService {
+public interface AuthService {
 
 
     User findUserByUsername(String userName);
 
 
-    void registerAccount(User user);
+    boolean registerAccount(User user);
 
 
     User findRolesByUsername(String userName);

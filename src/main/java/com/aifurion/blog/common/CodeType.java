@@ -9,17 +9,26 @@ public enum CodeType {
 
 
     /**
+     * 状态
+     */
+
+    STATUS(100),
+
+    /**
      * 成功
      */
     SUCCESS(200),
+
     /**
      * 警告
      */
-    WARN(301),
+    WARN(300),
+
     /**
      * 错误
      */
     ERROR(500);
+
 
     private final int value;
 

@@ -24,16 +24,11 @@ $(function() {
                     url:theUrl,
                     async:true,
                     success:function(res){
-                        dt.innerHTML = res;
-
+                       dt.innerHTML = res;
                     }
                 });
 
-
-
             });
-
-
 
 
 

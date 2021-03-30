@@ -33,10 +33,14 @@
                     <div class="form d-flex align-items-center">
                         <div class="content">
                             <div class="form-group">
-                                <input id="register-username" class="input-material" type="text" name="username"
+                                <input id="register-username" class="input-material" type="text"
+                                       name="username"
                                        placeholder="请输入用户名/姓名">
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback" id="invalid-num">
                                     用户名必须在2~10位之间
+                                </div>
+                                <div class="invalid-feedback" id="invalid-exit">
+                                    用户名已存在！
                                 </div>
                             </div>
                             <div class="form-group">
@@ -69,24 +73,60 @@
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script>
+
+
     $(function () {
         /*错误class  form-control is-invalid
         正确class  form-control is-valid*/
         var flagName = false;
         var flagPas = false;
         var flagPass = false;
+
         /*验证用户名*/
         var name, passWord, passWords;
         $("#register-username").change(function () {
+
+            document.getElementById('invalid-num').style.display = '';
+            document.getElementById('invalid-exit').style.display = '';
+
+
+            /*判断用户名长度*/
+
             name = $("#register-username").val();
             if (name.length < 2 || name.length > 10) {
-                $("#register-username").removeClass("form-control is-valid")
+
+                document.getElementById('invalid-exit').style.display = 'none';
+
+                $("#register-username").removeClass("form-control is-valid");
                 $("#register-username").addClass("form-control is-invalid");
                 flagName = false;
             } else {
-                $("#register-username").removeClass("form-control is-invalid")
-                $("#register-username").addClass("form-control is-valid");
-                flagName = true;
+
+                /*判断用户名是否存在*/
+
+                document.getElementById('invalid-num').style.display = 'none';
+                $.ajax({
+                    type: "post",
+                    url: "/auth/ifUsernameExit",
+                    async: true,
+                    data: {
+                        "username": name
+                    },
+                    success: function (r) {
+                        if (r.code === 200) {
+                            $("#register-username").removeClass("form-control is-invalid");
+                            $("#register-username").addClass("form-control is-valid");
+
+                            flagName = true;
+                        } else {
+
+                            $("#register-username").removeClass("form-control is-valid");
+                            $("#register-username").addClass("form-control is-invalid");
+
+                            flagName = false;
+                        }
+                    }
+                });
             }
         })
         /*验证密码*/
@@ -134,16 +174,11 @@
                     },
                     success: function (r) {
 
-                        console.dir(r);
-                        console.log("success");
-
                         if (r.code === 200) {
                             location.href = "/auth/login";
                         } else {
-                            /* $.modal.closeLoading();
-                             $('.imgcode').click();
-                             $(".code").val("");
-                             $.modal.msg(r.msg);*/
+                            alert(r.msg);
+
                         }
 
                     }

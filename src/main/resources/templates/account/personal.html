@@ -1,6 +1,48 @@
+<!doctype html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Blog</title>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/clickJS.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/slide.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/flat-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/jquery.nouislider.css">
+
+
+</head>
+<body>
+
+
 <!-- 个人信息 -->
 <div role="tabpanel" class="tab-pane" id="personal">
 
     <h1>个人信息</h1>
 
+        <div th:object="${user}">
+            <p th:text="'用户名'+*{username}"></p>
+            <p th:text="'姓 名'+*{nickname}"></p>
+            <p th:text="'邮箱'+*{email}"></p>
+            <p th:text="'注册时间'+*{regTime}"></p>
+
+        </div>
+
+
 </div>
+
+
+</body>

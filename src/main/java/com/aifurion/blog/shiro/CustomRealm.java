@@ -4,7 +4,7 @@ import com.aifurion.blog.Utils.ApplicationContextUtils;
 import com.aifurion.blog.entity.Permission;
 import com.aifurion.blog.entity.User;
 import com.aifurion.blog.salt.MyByteSource;
-import com.aifurion.blog.service.UserService;
+import com.aifurion.blog.service.AuthService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -33,9 +33,9 @@ public class CustomRealm extends AuthorizingRealm {
 
         String principal = (String) principals.getPrimaryPrincipal();
 
-        UserService userService = (UserService) ApplicationContextUtils.getBean("userServiceImpl");
+        AuthService authService = (AuthService) ApplicationContextUtils.getBean("authServiceImpl");
 
-        User user = userService.findRolesByUsername(principal);
+        User user = authService.findRolesByUsername(principal);
 
         if (!CollectionUtils.isEmpty(user.getRoles())) {
             SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
@@ -43,7 +43,7 @@ public class CustomRealm extends AuthorizingRealm {
             user.getRoles().forEach(role -> {
                 simpleAuthorizationInfo.addRole(role.getName());
 
-                List<Permission> permissions = userService.findPermissionByRoleId(role.getId());
+                List<Permission> permissions = authService.findPermissionByRoleId(role.getId());
 
                 if (!CollectionUtils.isEmpty(permissions)) {
 
@@ -77,9 +77,9 @@ public class CustomRealm extends AuthorizingRealm {
         SimpleAuthenticationInfo simpleAuthenticationInfo = null;
 
 
-        UserService userService = (UserService) ApplicationContextUtils.getBean("userServiceImpl");
+        AuthService authService = (AuthService) ApplicationContextUtils.getBean("authServiceImpl");
 
-        User user = userService.findUserByUsername(principal);
+        User user = authService.findUserByUsername(principal);
 
         if (!ObjectUtils.isEmpty(user)) {
 
