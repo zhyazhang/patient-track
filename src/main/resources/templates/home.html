@@ -1,0 +1,223 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+    <div class="container-fluid" style="margin-bottom:90px; ">
+
+        <div class="row" style="margin-top:50px;">
+            <div class="col-sm-6 col-lg-2">
+                <div class="card bg-primary">
+                    <div class="card-body clearfix">
+                        <div class="pull-left">
+                            <p class="h6 text-white m-t-0">今日新注册</p>
+                            <p class="h3 text-white m-b-0" th:text="${datas.todayRegisterCount}"></p>
+                        </div>
+                        <div class="pull-right"><span class="img-avatar img-avatar-48 bg-translucent"><i
+                                class="ftsucai-56 fa-1-5x"></i></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-2">
+                <div class="card bg-danger">
+                    <div class="card-body clearfix">
+                        <div class="pull-left">
+                            <p class="h6 text-white m-t-0">今日新建病例</p>
+                            <p class="h3 text-white m-b-0" th:text="${datas.todayCreateCaseCount}"></p>
+                        </div>
+                        <div class="pull-right"><span class="img-avatar img-avatar-48 bg-translucent"><i
+                                class="ftsucai-310 fa-1-5x"></i></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-2">
+                <div class="card bg-success">
+                    <div class="card-body clearfix">
+                        <div class="pull-left">
+                            <p class="h6 text-white m-t-0">已有病人</p>
+                            <p class="h3 text-white m-b-0" th:text="${datas.patientCount}"></p>
+                        </div>
+                        <div class="pull-right"><span class="img-avatar img-avatar-48 bg-translucent"><i
+                                class="ftsucai-55 fa-1-5x"></i></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-2">
+                <div class="card bg-purple">
+                    <div class="card-body clearfix">
+                        <div class="pull-left">
+                            <p class="h6 text-white m-t-0">已有医护人员</p>
+                            <p class="h3 text-white m-b-0" th:text="${datas.doctorCount}"></p>
+                        </div>
+                        <div class="pull-right"><span class="img-avatar img-avatar-48 bg-translucent"><i
+                                class="ftsucai-310 fa-1-5x"></i></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="card bg-purple">
+                    <div class="card-body clearfix">
+                        <div class="pull-left">
+                            <p class="h6 text-white m-t-0">住院人数</p>
+                            <p class="h3 text-white m-b-0" th:text="${datas.hospitalized}"></p>
+                        </div>
+                        <div class="pull-right"><span class="img-avatar img-avatar-48 bg-translucent"><i
+                                class="ftsucai-310 fa-1-5x"></i></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 50px">
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>本周注册</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas class="js-chartjs-bars"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>每月病例数</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas class="js-chartjs-lines"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+<!--End 页面主要内容-->
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+
+<!--图表插件-->
+<script type="text/javascript" src="/js/Chart.js"></script>
+
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
+
+<script th:inline="javascript">
+
+
+    var datas = [[${datas}]];
+    var noticeCount = [[${unReadNoticeCount}]];
+
+
+    $(document).ready(function (e) {
+
+
+        var datas = [[${datas}]];
+        weekDataVOS = datas.weekDataVOS;
+        monthDataVOS = datas.monthDataVOS;
+
+
+        if (noticeCount > 0) {
+
+            tips.notify('您有'+noticeCount+'条通知未读！请及时查看！', 'danger', 5000);
+
+        }
+
+        var theweek = new Array(7);
+
+        for (var i = 0; i < theweek.length; i++) {
+            theweek[i] = 0;
+        }
+
+
+        var theMonth = new Array(12);
+
+        for (var i = 0; i < weekDataVOS.length; i++) {
+
+            //console.log(Number(weekDataVOS[i].theweek));
+            theweek[Number(weekDataVOS[i].theweek) - 1] = Number(weekDataVOS[i].thecount);
+
+        }
+
+        for (var i = 0; i < monthDataVOS.length; i++) {
+
+            theMonth[Number(monthDataVOS[i].themonth) - 1] = Number(monthDataVOS[i].thecount);
+
+        }
+
+        var $dashChartBarsCnt = jQuery('.js-chartjs-bars')[0].getContext('2d'),
+            $dashChartLinesCnt = jQuery('.js-chartjs-lines')[0].getContext('2d');
+
+        var $dashChartBarsData = {
+            labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+            datasets: [
+                {
+                    label: '本周注册',
+                    borderWidth: 1,
+                    borderColor: 'rgba(0,0,0,0)',
+                    backgroundColor: 'rgba(255,0,0,0.7)',
+                    hoverBackgroundColor: "rgba(255,0,0,1)",
+                    hoverBorderColor: "rgba(0,0,0,0)",
+                    data: theweek
+                }
+            ]
+        };
+
+
+        var $dashChartLinesData = {
+            labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+            backgroundColor: ['rgba(255, 0, 0, 0.2)'],
+            datasets: [
+                {
+                    label: '每月病例数',
+                    data: theMonth,
+                    borderColor: '#DA212F',
+                    backgroundColor: 'rgba(218,33,47, 1)',
+                    borderWidth: 1,
+                    fill: false,
+                    lineTension: 0.5
+                }
+            ]
+        };
+
+        new Chart($dashChartBarsCnt, {
+            type: 'bar',
+            data: $dashChartBarsData
+        });
+
+        var myLineChart = new Chart($dashChartLinesCnt, {
+            type: 'line',
+            data: $dashChartLinesData,
+        });
+
+    });
+</script>
+</body>
+</html>

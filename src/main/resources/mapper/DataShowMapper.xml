@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aifurion.track.mapper.DataShowMapper">
+
+    <select id="getCountTodayRegisterUser" resultType="java.lang.Integer">
+        select count(*)
+        from t_user
+        where to_days(regTime) = to_days(now());
+    </select>
+
+    <select id="getCountTodayCreateCase" resultType="java.lang.Integer">
+        select count(*)
+        from t_case
+        where to_days(createTime) = to_days(now());
+    </select>
+
+    <select id="getCountUser" resultType="java.lang.Integer">
+        select count(*)
+        from t_user;
+    </select>
+
+    <select id="getCountCase" resultType="java.lang.Integer">
+        select count(*)
+        from t_case
+        where to_days(createTime) = to_days(now());
+    </select>
+
+
+    <select id="getCountDoctor" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_user u
+                 LEFT JOIN t_user_role ur ON u.id = ur.userid
+                 LEFT JOIN t_role r ON r.id = ur.roleid
+        WHERE r.id = '2';
+
+    </select>
+
+
+    <select id="getCountPatient" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_user u
+                 LEFT JOIN t_user_role ur ON u.id = ur.userid
+                 LEFT JOIN t_role r ON r.id = ur.roleid
+        WHERE r.id = '3';
+
+    </select>
+
+    <select id="getCountWeek" resultType="WeekDataVO">
+        SELECT count(*)                         thecount,
+               date_format(regTime, '%Y-%m-%d') theday,
+               date_format(regTime, '%w')       theweek
+        FROM t_user
+        GROUP BY theday, theweek ASC
+        HAVING
+            YEARWEEK( theday ) = YEARWEEK(NOW());
+    </select>
+    <select id="getCountMonth" resultType="MonthDataVO">
+        SELECT count(*)                            thecount,
+               date_format(createTime, '%Y-%m-%d') theday,
+               date_format(createTime, '%m')       themonth
+        FROM t_case
+        GROUP BY themonth asc
+        HAVING
+            YEAR ( theday )= YEAR (NOW());
+    </select>
+
+</mapper>

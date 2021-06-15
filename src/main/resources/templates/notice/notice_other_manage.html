@@ -1,0 +1,111 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/search-button.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/summernote.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+    <script type="text/javascript" src="/js/main.min.js"></script>
+    <script type="text/javascript" src="/js/summernote.min.js"></script>
+    <!--消息提示-->
+    <script src="/js/bootstrap-notify.min.js"></script>
+    <script type="text/javascript" src="/js/tips.js"></script>
+
+
+    <script type="text/javascript" src="/js/notice/notice_other_manage.js"></script>
+
+</head>
+
+<body>
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+    <div class="container-fluid" style="margin-bottom:90px;">
+
+        <div class="row" style="margin-top:15px;">
+
+            <div class="col-lg-12">
+                <div id="search">
+                    <div id="search-wrap">
+                        <select class="search-choise" id="search-select">
+                            <option value="pushUserName">发布人</option>
+                            <option value="title">标题</option>
+                        </select>
+                        <input class="search-content" type="text" placeholder="输入搜索内容" id="search-input"
+                               name="search-input">
+                        <button class="search-btn" type="button" id="search-button" onclick="search()">搜索</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 50px">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th width="5">
+                                        <label class="ftdms-checkbox checkbox-primary">
+                                            <input type="checkbox" id="check-all"><span></span>
+                                        </label>
+                                    </th>
+                                    <th>ID</th>
+                                    <th>标题</th>
+                                    <th>发布人</th>
+                                    <th>发布时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="notice:${notices}">
+                                    <td>
+                                        <label class="ftdms-checkbox checkbox-primary">
+                                            <input type="checkbox" id="check-item" name="check-item"
+                                                   value="${notice.id}"><span></span>
+                                        </label>
+                                    </td>
+                                    <td th:text="${notice.id}"></td>
+                                    <td th:text="${notice.title}"></td>
+                                    <td th:text="${notice.userid}"></td>
+                                    <td th:text="${notice.addtime}"></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-xs btn-default submenuitem"
+                                               th:href="'/notice/toView/'+${notice.id}"
+                                               target="_self" title="查看" data-toggle="tooltip"><i
+                                                    class="ftsucai-ui-07"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <input hidden th:value="${type}" id="read_type">
+
+</main>
+
+</body>
+</html>

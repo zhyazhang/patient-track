@@ -1,0 +1,396 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+
+    <link href="/css/animate.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+    <div class="container-fluid" style="margin-left: 500px;margin-right: 500px">
+
+        <div class="row" style="margin-top:15px;">
+            <div class="col-lg-12">
+                <div class="card">
+                    <ul class="nav nav-tabs page-tabs">
+                        <li style="margin-left: 20%"><a href="/auth/register">就诊者</a></li>
+                        <li class="active" style="margin-left: 40%"><a href="/auth/doctorRegister">医护人员</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+
+                            <div name="edit-form" class="edit-form">
+                                <div class="form-group">
+                                    <label for="phone">手机号</label>
+                                    <input class="form-control" type="text" id="phone" name="phone"
+                                           placeholder="11位手机号">
+
+
+                                    <div class="invalid-feedback" id="invalid-num" hidden>
+                                        手机号必须为11位！
+                                    </div>
+                                    <div class="invalid-feedback" id="invalid-exit" hidden>
+                                        手机号已被注册！
+                                    </div>
+                                    <div class="invalid-feedback" id="invalid-alert" hidden>
+                                        请正确输入手机号！
+                                    </div>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="serialnumber">工号</label>
+                                    <input class="form-control" type="text" id="serialnumber" name="serialnumber"
+                                           placeholder="8位数字工号">
+
+                                    <div class="invalid-feedback" id="invalid-serial" hidden>
+                                        工号位8位数字！
+                                    </div>
+
+                                    <div class="invalid-feedback" id="invalid-serialexit" hidden>
+                                        工号已被注册！
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group col-md-12">
+                                    <label for="dep">选择部门</label>
+                                    <div class="form-group col-md-12" id="dep" name="dep">
+
+                                        <div class="col-xs-12">
+                                            <select class="form-control" id="maindep-select" name="maindep-select"
+                                                    size="1" onChange="nextChange()">
+                                                <option value="-1">请选择</option>
+
+                                                <option th:each="department:${departments}"
+                                                        th:text="${department.maindep}"
+                                                        th:value="${department.id}">
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-xs-12">
+                                            <select class="form-control" id="secdep-select" name="secdep-select"
+                                                    size="1">
+                                                <option value="-1">请选择</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="invalid-feedback" id="invalid-select" hidden>
+                                            请选择科室！
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="nickname">姓名</label>
+                                    <input class="form-control" type="text" id="nickname" name="nickname"
+                                           placeholder="姓名">
+
+                                    <div class="invalid-feedback" id="invalid-name" hidden>
+                                        名字长度不能小于1位！
+                                    </div>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">密码</label>
+                                    <input class="form-control" type="password" id="password" name="password">
+
+                                    <div class="invalid-feedback" id="invalid-pwd" hidden>
+                                        密码长度大于6位！
+                                    </div>
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary m-r-5" id="regbtn">注 册</button>
+                                    <button type="button" class="btn btn-default"
+                                            onclick="javascript:history.back(-1);return false;">返 回
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+<!--End 页面主要内容-->
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+
+
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
+<script th:inline="javascript">
+
+
+    <!--选择框二级联动-->
+
+    function nextChange() {
+        var first = document.getElementById("maindep-select");
+        var second = document.getElementById("secdep-select");
+        second.options.length = 0;
+        var departments = [[${departments}]];
+
+        secdepartment = departments[first.selectedIndex - 1].secDepartments;
+
+        for (var i = 0; i < secdepartment.length; i++) {
+
+            second.options.add(new Option(secdepartment[i].secdep, secdepartment[i].id));
+
+        }
+
+
+    }
+
+
+    $(function () {
+        /*错误class  form-control is-invalid
+        正确class  form-control is-valid*/
+        var flagPhone = false;
+        var flagPwd = false;
+        var flagName = false;
+        var flagSerial = false;
+
+        var phoneNum;
+        var pwd;
+        var nickName;
+        var serialnumber;
+
+
+        /*验证用户名*/
+        $("#phone").change(function () {
+
+            /*判断用户名长度*/
+
+            $("#invalid-num").hide();
+            $("#invalid-alert").hide();
+            $("#invalid-exit").hide();
+
+
+            phoneNum = $("#phone").val();
+            if (phoneNum.length !== 11) {
+
+
+                $("#invalid-exit").hide();
+
+                $("#invalid-alert").hide();
+
+                $("#invalid-num").show();
+                flagPhone = false;
+            } else {
+
+                /*判断用户名是否存在*/
+                $.ajax({
+                    type: "post",
+                    url: "/auth/ifUsernameExit",
+                    async: true,
+                    data: {
+                        "phone": phoneNum
+                    },
+                    success: function (r) {
+                        if (r.code === 200) {
+                            flagPhone = true;
+                        } else {
+
+                            $("#invalid-num").hide();
+
+                            $("#invalid-alert").hide();
+
+
+                            $("#invalid-exit").show();
+                            flagPhone = false;
+                        }
+                    }
+                });
+            }
+        })
+
+
+        $("#nickname").change(function () {
+
+            nickName = $("#nickname").val();
+
+            $("#invalid-name").hide();
+
+            if (nickName.length < 2) {
+
+                $("#invalid-name").show();
+                flagName = false;
+
+            } else {
+                flagName = true;
+            }
+
+
+        });
+        $("#serialnumber").change(function () {
+
+            serialnumber = $("#serialnumber").val();
+
+            $("#invalid-serial").hide();
+            $("#invalid-serialexit").hide();
+
+            if (serialnumber.length !== 8) {
+
+                $("#invalid-serial").show();
+                flagSerial = false;
+
+            } else {
+
+                $("#invalid-serial").hide();
+
+                $.ajax({
+                    type: "post",
+                    url: "/auth/ifSerialNumberExit",
+                    async: true,
+                    data: {
+                        "number": serialnumber
+                    },
+                    success: function (r) {
+                        if (r.code === 200) {
+                            flagSerial = true;
+                        } else {
+
+                            $("#invalid-serialexit").show();
+                            flagSerial = false;
+                        }
+                    }
+                });
+            }
+
+        });
+
+
+        $("#password").change(function () {
+
+            pwd = $("#password").val();
+
+            $("#invalid-pwd").hide();
+
+            if (pwd.length < 6) {
+
+                $("#invalid-pwd").show();
+                flagPwd = false;
+
+            } else {
+                flagPwd = true;
+            }
+
+
+        });
+
+
+        $("#secdep-select").change(function () {
+            $("#invalid-select").hide();
+
+        });
+        $("#maindep-select").change(function () {
+            $("#invalid-select").hide();
+
+        });
+
+
+        $("#regbtn").click(function () {
+
+
+            var mainSelect = $("#maindep-select").val();
+
+            var secSelect = $("#secdep-select").val();
+
+            phoneNum = $("#phone").val();
+            serialnumber = $("#serialnumber").val();
+            pwd = $("#password").val();
+            nickName = $("#nickname").val();
+
+
+            if (mainSelect !== "-1" || secSelect !== "-1") {
+
+
+                if (flagPhone && flagPwd && flagName && flagSerial) {
+
+                    tips.loading('show');
+
+
+                    $.ajax({
+                        type: "post",
+                        url: "/auth/register/2",
+                        data: {
+                            "phone": phoneNum,
+                            "serialnumber": serialnumber,
+                            "secdepid": secSelect,
+                            "maindepid": mainSelect,
+                            "password": pwd,
+                            "nickname": nickName
+                        },
+                        success: function (r) {
+
+                            if (r.code === 200) {
+
+                                tips.loading('hide');
+                                tips.notify(r.msg, 'success', 3000);
+                                self.location = document.referrer;
+                            } else {
+                                tips.loading('hide');
+                                tips.notify(r.msg, 'danger', 100);
+
+                            }
+
+                        }
+                    });
+
+                } else {
+
+                    tips.loading('hide');
+                    tips.notify("请正确格式输入账号和密码！", 'danger', 100);
+
+                }
+
+            } else {
+                $("#invalid-select").show();
+            }
+
+
+        });
+    });
+
+
+</script>
+</body>
+</html>

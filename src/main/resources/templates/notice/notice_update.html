@@ -1,0 +1,102 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/search-button.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/summernote.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="col-sm-11" style="margin-left: 50px">
+    <div class="card">
+        <div class="card-header">
+            <label for="notice-title">通知标题</label>
+            <input id="notice-title" class="col-sm-6" th:value="${notice.title}">
+        </div>
+        <div class="card-body">
+            <div id="summernote"><p></p></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="form-group col-md-12" style="text-align: center">
+    <button class="btn btn-primary ajax-post" id="updateBtn">修改
+    </button>
+    <button type="button" class="btn btn-default" style="margin-left: 50px"
+            onclick="javascript:window.location.href=document.referrer;return false;">返 回
+    </button>
+</div>
+
+
+<!--End 页面主要内容-->
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/js/main.min.js"></script>
+
+<!--富文本-->
+<script type="text/javascript" src="/js/summernote.min.js"></script>
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
+<!--对话框-->
+<script src="/js/jconfirm/jquery-confirm.min.js"></script>
+
+<script type="text/javascript" src="/js/notice/notice.js"></script>
+
+<script th:inline="javascript">
+    var notice = [[${notice}]];
+    $(function () {
+
+        if (notice != null) {
+
+            $('#summernote').summernote('code', notice.content);
+
+
+        }
+
+        $('#updateBtn').click(function () {
+
+            var title = $('#notice-title').val();
+            var content = $('#summernote').summernote('code');
+
+            $.ajax({
+                type: "post",
+                url: "/notice/update",
+                data: {
+                    "id": notice.id,
+                    "title": title,
+                    "content": content
+                },
+                success: function (r) {
+
+                    if (r.code === 200) {
+                        tips.notify('修改成功！', 'success', 3000);
+                    } else {
+                        tips.notify('修改失败，请稍后重试！', 'danger', 3000);
+                    }
+                }
+            });
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

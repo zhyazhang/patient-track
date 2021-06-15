@@ -1,0 +1,76 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/search-button.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/summernote.min.css" rel="stylesheet">
+
+
+    <!--End 页面主要内容-->
+
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+    <script type="text/javascript" src="/js/main.min.js"></script>
+
+    <!--富文本-->
+    <script type="text/javascript" src="/js/summernote.min.js"></script>
+    <!--消息提示-->
+    <script src="/js/bootstrap-notify.min.js"></script>
+    <script type="text/javascript" src="/js/tips.js"></script>
+
+    <!--对话框-->
+    <script src="/js/jconfirm/jquery-confirm.min.js"></script>
+    <script type="text/javascript" src="/js/notice/notice.js"></script>
+    <script type="text/javascript" src="/js/notice/notice_add.js"></script>
+
+
+</head>
+
+<body>
+<!--页面主要内容-->
+<div style="height: 50px">
+
+</div>
+
+<div id="summernote"><p></p></div>
+
+<div class="form-group col-md-12" style="text-align: center">
+    <button class="btn btn-primary ajax-post regbtn" data-toggle="modal" data-target="#myModal">添 加
+    </button>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">请输入通知标题</h4>
+            </div>
+            <div class="modal-body">
+                <input id="thetitle" type="text" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="addnotice()">点击提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

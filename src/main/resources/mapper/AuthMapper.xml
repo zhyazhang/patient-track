@@ -1,44 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.aifurion.blog.mapper.AuthMapper">
+<mapper namespace="com.aifurion.track.mapper.AuthMapper">
 
 
-    <select id="findUserByUsername" parameterType="string" resultType="User">
+    <select id="findUserByPhone" parameterType="string" resultType="User">
 
         select *
         from t_user
-        where username = #{userName};
+        where phone = #{phone};
 
     </select>
 
 
-    <insert id="saveAccount" parameterType="User" keyProperty="id" useGeneratedKeys="true">
-        insert into t_user
-        values (#{id}, #{username},null, #{password}, #{salt},null,null,null,#{regTime});
+    <select id="findPatientByPhone" parameterType="string" resultType="string">
 
+        select nickname
+        from t_user u
+                 LEFT JOIN t_user_role ur on ur.userid = u.id
+                 LEFT JOIN t_role r on ur.roleid = r.id
+        where phone = #{phone}
+          and r.id = 3
+
+    </select>
+    <select id="findUserBySerialNumber" parameterType="string" resultType="User">
+
+        select *
+        from t_user
+        where serialnumber = #{number};
+
+    </select>
+
+    <select id="findIdByPhone" parameterType="string" resultType="java.lang.Integer">
+
+        select id
+        from t_user
+        where phone = #{phone};
+
+    </select>
+
+
+    <insert id="registerAccount" parameterType="User">
+        insert into t_user
+        values (#{id}, #{phone}, #{age}, #{nickname}, #{password}, #{salt}, #{enabled}, #{gender}, #{secdepid},
+                #{maindepid}, #{email}, #{serialnumber}, #{regTime});
+
+    </insert>
+
+
+    <insert id="registerRoleForNewUser">
+        insert into t_user_role
+        values (null, #{roleid}, #{patientId});
     </insert>
 
 
     <resultMap id="userMap" type="User">
         <id column="uid" property="id"/>
-        <result column="uname" property="username"/>
-        <collection property="roles" javaType="list" ofType="com.aifurion.blog.entity.Role">
+        <result column="uphone" property="phone"/>
+        <result column="uage" property="age"/>
+        <result column="unickname" property="nickname"/>
+        <result column="ugender" property="gender"/>
+        <result column="usecdepid" property="secdepid"/>
+        <result column="umaindepid" property="maindepid"/>
+        <result column="uemail" property="email"/>
+        <result column="userialnumber" property="serialnumber"/>
+        <result column="uregTime" property="regTime"/>
+        <collection property="roles" javaType="list" ofType="com.aifurion.track.entity.Role">
             <id column="rid" property="id"/>
             <result column="rname" property="name"/>
         </collection>
     </resultMap>
 
 
-    <select id="findRolesByUsername" parameterType="string" resultMap="userMap">
+    <select id="findRolesByPhone" parameterType="string" resultMap="userMap">
 
-        select u.id       uid,
-               u.username uname,
-               r.id       rid,
-               r.name     rname
+        select u.id           uid,
+               u.phone        uphone,
+               u.age          uage,
+               u.nickname     unickname,
+               u.gender       ugender,
+               u.secdepid     usecdepid,
+               u.maindepid    umaindepid,
+               u.email        uemail,
+               u.serialnumber userialnumber,
+               u.regTime      uregTime,
+               r.id           rid,
+               r.name         rname
         from t_user u
                  left join t_user_role ur on u.id = ur.userid
                  left join t_role r on ur.roleid = r.id
-        where u.username = #{userName}
+        where u.phone = #{phone}
 
     </select>
 
@@ -52,6 +102,28 @@
                  left join t_role_permission rp on r.id = rp.roleid
                  left join t_permission p on rp.permissionid = p.id
         where r.id = #{id};
+
+    </select>
+
+
+    <resultMap id="departmentMap" type="MainDepartment">
+        <id column="mid" property="id"/>
+        <result column="mdep" property="maindep"/>
+        <collection property="secDepartments" javaType="list" ofType="com.aifurion.track.entity.SecDepartment">
+            <id column="sid" property="id"/>
+            <result column="sdep" property="secdep"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="findAllDepartment" resultMap="departmentMap">
+
+        select m.id      mid,
+               m.maindep mdep,
+               s.id      sid,
+               s.secdep  sdep
+        from t_maindep m
+                 left join t_secdep s on m.id = s.mainid
 
     </select>
 

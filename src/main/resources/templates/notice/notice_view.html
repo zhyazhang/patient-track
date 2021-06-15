@@ -1,0 +1,77 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/search-button.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/summernote.min.css" rel="stylesheet">
+</head>
+
+<body style="text-align: center">
+<!--页面主要内容-->
+<div style="height: 50px">
+
+</div>
+
+
+<div class="col-sm-11" style="margin-left: 50px">
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                <p id="notice-title">
+
+                </p>
+            </h4>
+
+        </div>
+        <div class="card-body">
+            <p id="notice-content"></p>
+        </div>
+    </div>
+</div>
+
+
+<!--End 页面主要内容-->
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/js/main.min.js"></script>
+
+<!--富文本-->
+<script type="text/javascript" src="/js/summernote.min.js"></script>
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
+<!--对话框-->
+<script src="/js/jconfirm/jquery-confirm.min.js"></script>
+<script th:inline="javascript">
+    var notice = [[${notice}]];
+
+    $(function () {
+        if (notice != null) {
+            var content = document.getElementById("notice-content");
+            var title = document.getElementById("notice-title");
+            content.innerHTML = notice.content;
+            title.innerHTML = notice.title;
+
+        }
+    });
+
+
+</script>
+
+</body>
+</html>

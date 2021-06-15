@@ -1,0 +1,140 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+        <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/search-button.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+    <div class="container-fluid" style="margin-bottom:90px;">
+
+        <div class="row" style="margin-top:15px">
+            <div class="col-lg-12">
+
+                <div id="search">
+                    <div id="search-wrap">
+                        <select class="search-choise" id="search-select">
+                            <option value="nickname">名字</option>
+                            <option value="age">年龄</option>
+                            <option value="department">科室</option>
+                            <option value="phone">手机号</option>
+                        </select>
+                        <input class="search-content" type="text" placeholder="输入搜索内容" id="search-input"
+                               name="search-button">
+                        <button class="search-btn" type="button" id="search-button">搜索</button>
+                    </div>
+                </div>
+
+                <div class="card">
+
+
+                    <div class="card-body" style="margin-top: 50px">
+
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th width="5">
+                                        <label class="ftdms-checkbox checkbox-primary">
+                                            <input type="checkbox" id="check-all"><span></span>
+                                        </label>
+                                    </th>
+                                    <th>电话</th>
+                                    <th>患者名字</th>
+                                    <th>年龄</th>
+                                    <th>性别</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="user:${users.list}">
+                                    <td>
+                                        <label class="ftdms-checkbox checkbox-primary">
+                                            <input type="checkbox" id="check-item" name="check-item" value="${user.id}"><span></span>
+                                        </label>
+                                    </td>
+                                    <td th:text="${user.phone}"></td>
+                                    <td th:text="${user.nickname}"></td>
+                                    <td th:text="${user.age}"></td>
+                                    <td th:text="${user.gender}==0?'女':'男'"></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="pagination no-border">
+                            <a href="/account/gethistoryusers" class="submenuitem">首页</a>
+                            <a th:href="@{/account/gethistoryusers(pageNum=${users.hasPreviousPage}?${users.prePage}:1)}"
+                               class="submenuitem">上一页</a>
+
+                            <b th:each="nav : ${users.navigatepageNums}">
+                                <a th:href="'/account/gethistoryusers?pageNum='+${nav}" th:text="${nav}"
+                                   th:if="${nav != users.pageNum}" class="submenuitem"></a>
+                                <span style="font-weight: bold;background: #6faed9;" th:if="${nav == users.pageNum}"
+                                      th:text="${nav}" class="submenuitem"></span>
+                            </b>
+
+
+                            <a th:href="@{/account/gethistoryusers(pageNum=${users.hasNextPage}?${users.nextPage}:${users.pages})}"
+                               class="submenuitem">下一页</a>
+                            <a th:href="@{/account/gethistoryusers(pageNum=${users.pages})}" class="submenuitem">尾页</a>
+
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+<!--End 页面主要内容-->
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/js/main.min.js"></script>
+<script type="text/javascript" src="/js/utils/ableCheck.js"></script>
+
+<script th:inline="javascript">
+
+    $(function () {
+
+
+        $("#search-button").click(function () {
+
+            var classify = $('#search-select option:selected').val();
+            var content = $('#search-input').val();
+
+            location.href = "/account/gethistoryusers?"+classify + "=" + content;
+
+
+        });
+
+
+        $('.search-bar .dropdown-menu a').click(function () {
+            var field = $(this).data('field') || '';
+            $('#search-field').val(field);
+            $('#search-btn').html($(this).text() + ' <span class="caret"></span>');
+        });
+    });
+</script>
+</body>
+</html>

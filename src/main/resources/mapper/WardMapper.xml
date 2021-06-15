@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aifurion.track.mapper.WardMapper">
+
+    <select id="getAllWardBuilding" resultType="string">
+        SELECT building
+        FROM t_ward
+        GROUP BY building
+
+    </select>
+    <select id="getAllWardFloorByBuilding" parameterType="Ward" resultType="string">
+        SELECT floor
+        FROM t_ward
+        where building = #{building}
+        GROUP BY floor
+
+    </select>
+    <select id="getAllWardRoomByFloor" parameterType="Ward" resultType="string">
+
+        SELECT room
+        FROM t_ward
+        where building = #{building}
+          AND floor = #{floor}
+        GROUP BY room
+    </select>
+    <select id="getAllWardDedByRoom" parameterType="Ward" resultType="string">
+        SELECT bed
+        FROM t_ward
+        where building = #{building}
+          AND floor = #{floor}
+          AND room = #{room}
+          AND empty = 1
+        GROUP BY bed
+    </select>
+    <select id="getWardIdByWard" parameterType="Ward" resultType="Ward">
+        SELECT *
+        FROM `t_ward`
+        WHERE building = #{building}
+          AND floor = #{floor}
+          AND room = #{room}
+          AND bed = #{bed}
+    </select>
+    <select id="getWardById" resultType="Ward">
+        SELECT *
+        FROM t_ward
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateWardState" parameterType="string">
+        UPDATE t_ward
+        SET empty = #{empty}
+        WHERE id = #{id}
+    </update>
+
+
+    <resultMap id="wardMap" type="WardVO">
+        <id column="id" property="id"/>
+        <result column="nickname" property="nickname"/>
+        <result column="phone" property="phone"/>
+        <result column="age" property="age"/>
+        <result column="secdep" property="secdep"/>
+        <result column="building" property="building"/>
+        <result column="floor" property="floor"/>
+        <result column="room" property="room"/>
+        <result column="bed" property="bed"/>
+    </resultMap>
+
+    <select id="getAllWardPatient" resultMap="wardMap" parameterType="WardVO">
+        SELECT u.id id,
+        u.nickname nickname,
+        u.phone phone,
+        u.age age,
+        s.secdep secdep,
+        w.building building,
+        w.floor floor,
+        w.room room,
+        w.bed bed
+        FROM t_user u
+        LEFT JOIN t_case c ON u.id = c.pid
+        LEFT JOIN t_user du ON c.did = du.id
+        LEFT JOIN t_secdep s ON du.secdepid = s.id
+        LEFT JOIN t_ward w ON c.ward = w.id
+        WHERE c.hospitalized = 1
+        AND c.state <![CDATA[ <> ]]> 2
+
+        <if test="phone != '' and phone !=null ">
+            and u.phone LIKE CONCAT('%','${phone}','%' )
+        </if>
+        <if test="nickname != '' and nickname != null">
+            and u.nickname LIKE CONCAT('%','${nickname}','%' )
+        </if>
+        <if test="age != '' and age != null">
+            and u.age = #{age}
+        </if>
+        <if test="secdep != '' and secdep != null">
+            and s.secdep LIKE CONCAT('%','${secdep}','%' )
+        </if>
+        GROUP BY
+        u.id
+    </select>
+
+
+    <select id="getHospitalizedCount" resultType="integer">
+
+        SELECT count(id)
+        FROM t_case
+        WHERE hospitalized = 1
+          AND state <![CDATA[<>]]> 2
+    </select>
+
+
+</mapper>
