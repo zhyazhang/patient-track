@@ -1,0 +1,395 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/search-button.css" rel="stylesheet">
+
+    <link href="/css/animate.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+
+    <div class="container-fluid" style="margin-bottom:90px;">
+
+        <div class="row" style="margin-top:15px;">
+
+            <div class="col-lg-12">
+
+
+                <div class="card">
+
+                    <div id="search">
+                        <div id="search-wrap">
+                            <select class="search-choise" id="search-select">
+                                <shiro:hasAnyRoles name="registrar,admin,doctor">
+                                    <option value="nickname">名字</option>
+                                    <option value="patientage">年龄</option>
+                                    <option value="state">病人状况</option>
+                                    <option value="department">科室</option>
+                                    <option value="phone">手机号</option>
+                                </shiro:hasAnyRoles>
+
+                                <shiro:hasAnyRoles name="patient">
+                                    <option value="department">所在科室</option>
+                                    <option value="doctorname">主治医师</option>
+                                </shiro:hasAnyRoles>
+                            </select>
+
+
+                            <input class="search-content" type="text" placeholder="输入搜索内容" id="search-input"
+                                   name="search-input">
+                            <button class="search-btn" type="button" id="search-button">搜索</button>
+                        </div>
+                    </div>
+
+                    <shiro:hasRole name="registrar">
+                        <div class="card-toolbar clearfix" style="margin-left: 600px">
+                            <div class="toolbar-btn-action">
+                                <a class="btn btn-primary m-r-5 submenuitem" data-id="link552"
+                                   id="add-case"
+                                   data-index="552">新增</a>
+                            </div>
+                        </div>
+
+                        <div id="addcase" class="modal fade" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <button class="close" data-dismiss="modal">
+                                            <span>×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-title">
+                                        <h1 class="text-center">挂号</h1>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div class="form-group" style="margin-top: 10px">
+                                                <label for="">选择科室</label>
+                                                <div class="form-group " id="dep" name="dep">
+                                                    <div class="col-xs-12">
+                                                        <select class="form-control" id="secdep-select"
+                                                                name="secdep-select"
+                                                                size="1" onChange="nextChange()">
+                                                            <option value="-1">请选择</option>
+                                                            <option th:each="department:${depDoctors}"
+                                                                    th:text="${department.secdep}"
+                                                                    th:value="${department.secdepid}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" style="margin-top: 10px">
+                                                <label for="">选择医生</label>
+                                                <div class="form-group ">
+                                                    <div class="col-xs-12">
+                                                        <select class="form-control" id="doctor-select"
+                                                                name="doctor-select"
+                                                                size="1">
+                                                            <option value="-1">请选择</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="invalid-feedback" id="invalid-select" hidden>
+                                                        请选择科室！
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="margin-top: 10px">
+                                                <label for="">填写就诊者手机号</label>
+                                                <input class="form-control" type="text" placeholder="11位手机号"
+                                                       id="patientphone">
+                                                <div class="invalid-feedback" id="invalid-notexit" hidden>
+                                                    此就诊者不存在，请检查输入的手机号！
+                                                </div>
+                                                <div class="invalid-feedback" id="invalid-num" hidden>
+                                                    此就诊者不存在，请检查输入的手机号！
+                                                </div>
+                                            </div>
+
+                                            <div class="text-right">
+                                                <button class="btn btn-primary" type="button" id="addcase-btn">提交
+                                                </button>
+                                                <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </shiro:hasRole>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th width="5">
+                                        <label class="ftdms-checkbox checkbox-primary">
+                                            <input type="checkbox" id="check-all"><span></span>
+                                        </label>
+                                    </th>
+                                    <th>病人姓名</th>
+                                    <th>手机号</th>
+                                    <th>病人年龄</th>
+                                    <th>病人状况</th>
+                                    <th>治疗状态</th>
+                                    <th>所在科室</th>
+                                    <th>主治医师</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="case:${allCase.list}">
+                                    <td>
+                                        <label class="ftdms-checkbox checkbox-primary">
+                                            <input type="checkbox" id="check-item" name="check-item"
+                                                   value="${case.caseid}"><span></span>
+                                        </label>
+                                    </td>
+                                    <td th:text="${case.patientname}"></td>
+                                    <td th:text="${case.patientphone}"></td>
+                                    <td th:text="${case.patientage}"></td>
+                                    <td th:text="${case.condition}"></td>
+
+                                    <td th:switch="${case.state}">
+                                        <span th:case="0">刚开始</span>
+                                        <span th:case="1">治疗中</span>
+                                        <span th:case="2">结束</span>
+                                    </td>
+                                    <td th:text="${case.secdepname}"></td>
+                                    <td th:text="${case.doctorname}"></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-xs btn-default submenuitem" id="viewUser"
+                                               th:href="'/case/viewcase/'+${case.caseid}"
+
+                                               target="_self" title="查看和修改" data-toggle="tooltip"><i
+                                                    class="ftsucai-eye-2"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <ul class="pagination no-border">
+                            <a href="/case/manage" class="submenuitem">首页</a>
+                            <a th:href="@{/case/manage(pageNum=${allCase.hasPreviousPage}?${allCase.prePage}:1)}"
+                               class="submenuitem">上一页</a>
+
+                            <b th:each="nav : ${allCase.navigatepageNums}">
+                                <a th:href="'/case/manage?pageNum='+${nav}" th:text="${nav}"
+                                   th:if="${nav != allCase.pageNum}" class="submenuitem"></a>
+                                <span style="font-weight: bold;background: #6faed9;" th:if="${nav == allCase.pageNum}"
+                                      th:text="${nav}" class="submenuitem"></span>
+                            </b>
+
+                            <a th:href="@{/case/manage(pageNum=${allCase.hasNextPage}?${allCase.nextPage}:${allCase.pages})}"
+                               class="submenuitem">下一页</a>
+                            <a th:href="@{/case/manage(pageNum=${allCase.pages})}" class="submenuitem">尾页</a>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!--End 页面主要内容-->
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/js/main.min.js"></script>
+<script type="text/javascript" src="/js/utils/ableCheck.js"></script>
+
+
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
+<script th:inline="javascript">
+
+    var registrarid = [[${registrarid}]];
+    var allCase = [[${allCase}]];
+
+    <!--选择框二级联动-->
+
+    function nextChange() {
+        var secdep = document.getElementById("secdep-select");
+        var doctor = document.getElementById("doctor-select");
+        doctor.options.length = 0;
+        var departments = [[${depDoctors}]];
+        var doctorlist = departments[secdep.selectedIndex - 1].doctorVOS;
+        for (var i = 0; i < doctorlist.length; i++) {
+            doctor.options.add(new Option(doctorlist[i].nickname, doctorlist[i].id));
+        }
+
+    }
+
+    $(function () {
+
+        var flagPhone = false;
+        var phone;
+        $("#addcase-btn").click(function () {
+
+            var flagsec = $("#secdep-select").val();
+            var flagdoctor = $("#doctor-select").val();
+            var doctorid = $('#doctor-select option:selected').val();
+            var phone = $("#patientphone").val();
+
+
+            var websocket;
+
+
+            if ('WebSocket' in window) {
+                websocket = new WebSocket("ws:localhost:8080/websocket/" + registrarid);
+            } else {
+                tips.notify("浏览器不支持websocket，不能及时接收挂号信息！", 'danger', 500);
+            }
+            websocket.onerror = function () {
+                tips.notify("挂号系统链接失败，不能及时接收挂号信息！", 'danger', 500);
+            };
+
+            function send() {
+                websocket.send(doctorid);
+            }
+
+            if (flagPhone && flagsec !== "-1" || flagdoctor !== "-1") {
+
+                $.ajax({
+                    type: "post",
+                    url: "/case/add",
+                    async: true,
+                    data: {
+                        "doctorid": doctorid,
+                        "phone": phone
+                    },
+                    success: function (r) {
+                        if (r.code === 200) {
+                            websocket.send(doctorid);
+                            $('#addcase').modal('hide');
+                            tips.notify(r.msg, 'success', 3000);
+                            window.location.reload();
+
+                        } else {
+                            tips.notify(r.msg, 'danger', 100);
+                        }
+                    }
+                });
+
+
+            } else {
+                $("#invalid-select").show();
+            }
+
+
+        });
+
+        $("#secdep-select").change(function () {
+            $("#invalid-select").hide();
+        });
+        $("#doctor-select").change(function () {
+            $("#invalid-select").hide();
+        });
+
+
+        $("#patientphone").change(function () {
+
+                $("#invalid-notexit").hide();
+                $("#invalid-num").hide();
+
+                phone = $("#patientphone").val().trim();
+
+                if (phone.length !== 11) {
+                    $("#invalid-num").show();
+                    flagPhone = false;
+                } else {
+                    flagPhone = true;
+
+                    $.ajax({
+                        type: "post",
+                        url: "/auth/ifPatientPhoneExit",
+                        async: true,
+                        data: {
+                            "phone": phone
+                        },
+                        success: function (r) {
+                            if (r.code === 200) {
+                                flagPhone = true;
+                            } else {
+                                $("#invalid-num").hide();
+                                $("#invalid-notexit").show();
+                                flagPhone = false;
+                            }
+                        }
+                    });
+                }
+            }
+        );
+
+
+        $("#add-case").click(function () {
+            $('#addcase').modal('show');
+
+        });
+
+
+        $("#search-button").click(function () {
+
+            var classify = $('#search-select option:selected').val().trim();
+            var content = $('#search-input').val().trim();
+
+            console.log(classify);
+
+            if ("state" === classify) {
+                switch (content) {
+                    case "刚开始":
+                        content = 0;
+                        break;
+                    case "治疗中":
+                        content = 1;
+                        break;
+                    case "结束":
+                        content = 2;
+                        break;
+                    default:
+                        content = 3;
+                }
+            }
+
+            console.log(content);
+            location.href = "/case/manage?" + classify + "=" + content;
+
+
+        });
+
+
+        $('.search-bar .dropdown-menu a').click(function () {
+            var field = $(this).data('field') || '';
+            $('#search-field').val(field);
+            $('#search-btn').html($(this).text() + ' <span class="caret"></span>');
+        });
+    });
+</script>
+</body>
+</html>

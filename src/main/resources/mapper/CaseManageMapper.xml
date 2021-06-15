@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aifurion.track.mapper.CaseManageMapper">
+
+    <resultMap id="caseVOMap" type="com.aifurion.track.entity.VO.CaseVO">
+
+        <id column="cid" property="caseid"/>
+        <result column="pid" property="patientid"/>
+        <result column="page" property="patientage"/>
+        <result column="pname" property="patientname"/>
+        <result column="pphone" property="patientphone"/>
+        <result column="did" property="doctorid"/>
+        <result column="dname" property="doctorname"/>
+        <result column="diagnosis" property="diagnosis"/>
+        <result column="cond" property="condition"/>
+        <result column="treatment" property="treatment"/>
+        <result column="createTime" property="createTime"/>
+        <result column="state" property="state"/>
+        <result column="ward" property="ward"/>
+        <result column="hospitalized" property="hospitalized"/>
+        <result column="mdepid" property="maindepid"/>
+        <result column="maindep" property="maindepname"/>
+        <result column="sdepid" property="secdepid"/>
+        <result column="secdep" property="secdepname"/>
+
+    </resultMap>
+
+    <select id="getCaseVOs" resultMap="caseVOMap">
+
+        SELECT c.id cid,
+        pu.id pid,
+        pu.age page,
+        pu.nickname pname,
+        pu.phone pphone,
+        du.id did,
+        du.nickname dname,
+        c.diagnosis diagnosis,
+        c.condition cond,
+        c.treatment treatment,
+        c.createTime createTime,
+        c.state state,
+        c.ward ward,
+        c.hospitalized hospitalized,
+        md.id mdepid,
+        md.maindep maindep,
+        sd.id sdepid,
+        sd.secdep secdep
+        FROM t_case c
+        LEFT JOIN t_user pu ON c.pid = pu.id
+        LEFT JOIN t_user du ON c.did = du.id
+        LEFT JOIN t_secdep sd ON du.secdepid = sd.id
+        LEFT JOIN t_maindep md ON du.maindepid = md.id
+        where 1=1
+        <if test="nickname !=''">
+            AND pu.nickname LIKE CONCAT('%','${nickname}','%' )
+        </if>
+
+        <if test="patientage !=''">
+            AND pu.age=#{patientage}
+        </if>
+        <if test="state !=''">
+            AND c.state=#{state}
+        </if>
+        <if test="department !=''">
+            AND sd.secdep LIKE CONCAT('%','${department}','%' )
+        </if>
+        <if test="patientphone !=''">
+            AND pu.phone LIKE CONCAT('%','${patientphone}','%' )
+        </if>
+        <if test="doctorphone !=''">
+            AND du.phone LIKE CONCAT('%','${doctorphone}','%' )
+        </if>
+        <if test="registrarid !=''">
+            AND c.rid = #{registrarid}
+        </if>
+        <if test="type !='all'">
+            AND to_days(c.createTime) = to_days(now())
+        </if>
+        <if test="doctorname !=''">
+            AND du.nickname LIKE CONCAT('%','${doctorname}','%' )
+        </if>
+        ORDER BY c.createTime DESC
+
+    </select>
+    <select id="getCaseVOByID" resultMap="caseVOMap">
+
+        SELECT c.id           cid,
+               pu.id          pid,
+               pu.nickname    pname,
+               du.id          did,
+               du.nickname    dname,
+               c.diagnosis    diagnosis,
+               c.CONDITION    cond,
+               c.treatment    treatment,
+               c.createTime   createTime,
+               c.state        state,
+               c.ward         ward,
+               c.hospitalized hospitalized,
+               md.id          mdepid,
+               md.maindep     maindep,
+               sd.id          sdepid,
+               sd.secdep      secdep
+        FROM t_case c
+                 LEFT JOIN t_user pu ON c.pid = pu.id
+                 LEFT JOIN t_user du ON c.did = du.id
+                 LEFT JOIN t_secdep sd ON du.secdepid = sd.id
+                 LEFT JOIN t_maindep md ON du.maindepid = md.id
+        WHERE c.id = #{caseID}
+
+    </select>
+    <select id="getDoctorAllCaseVO" resultMap="caseVOMap">
+
+        SELECT c.id           cid,
+               pu.id          pid,
+               pu.nickname    pname,
+               du.id          did,
+               du.nickname    dname,
+               c.diagnosis    diagnosis,
+               c.CONDITION    cond,
+               c.treatment    treatment,
+               c.createTime   createTime,
+               c.state        state,
+               c.ward         ward,
+               c.hospitalized hospitalized,
+               md.id          mdepid,
+               md.maindep     maindep,
+               sd.id          sdepid,
+               sd.secdep      secdep
+        FROM t_case c
+                 LEFT JOIN t_user pu ON c.pid = pu.id
+                 LEFT JOIN t_user du ON c.did = du.id
+                 LEFT JOIN t_secdep sd ON du.secdepid = sd.id
+                 LEFT JOIN t_maindep md ON du.maindepid = md.id
+        WHERE du.id = #{doctorID}
+
+    </select>
+
+
+    <update id="updateCase" parameterType="TheCase">
+        update t_case
+        set `state`=#{state},
+            `diagnosis`=#{diagnosis},
+            `ward`=#{wardId},
+            `hospitalized`=#{hospitalized},
+            `condition`=#{condition},
+            `treatment`=#{treatment}
+        where `id` = #{id}
+    </update>
+
+
+    <insert id="addCase" parameterType="TheCase">
+        insert into t_case
+        values (#{id}, #{pid}, #{did}, #{rid}, #{diagnosis}, #{condition}, #{treatment}, #{createTime}, #{state},
+                #{hospitalized}, #{wardId});
+    </insert>
+
+</mapper>

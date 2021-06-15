@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aifurion.track.mapper.AccountManageMapper">
+
+    <select id="getUsers" resultType="User">
+
+        SELECT
+        u.id id,
+        u.phone phone,
+        u.age age,
+        u.nickname nickname,
+        u.enabled enabled,
+        u.gender gender,
+        sd.secdep secdepid,
+        md.maindep maindepid,
+        u.email email,
+        u.serialnumber serialnumber,
+        u.regTime regTime
+
+        FROM
+        t_user u
+        LEFT JOIN t_user_role ur ON u.id = ur.userid
+        LEFT JOIN t_role r ON ur.roleid = r.id
+        LEFT JOIN t_maindep md on u.maindepid = md.id
+        LEFT JOIN t_secdep sd on u.secdepid = sd.id
+        WHERE
+        phone <![CDATA[<>]]> 'admin'
+        AND r.id=#{type}
+
+        <if test="did !=''">
+            AND
+            u.id in
+            (SELECT t_case.pid from t_case WHERE t_case.did=#{did})
+        </if>
+        <if test="pid !=''">
+            AND
+            u.id in
+            (SELECT t_case.did from t_case WHERE t_case.pid=#{pid})
+        </if>
+
+        <if test="nickname !=''">
+            AND u.nickname LIKE CONCAT('%','${nickname}','%' )
+        </if>
+        <if test="age !=''">
+            AND u.age=#{age}
+        </if>
+        <if test="phone !=''">
+            AND u.phone LIKE CONCAT('%','${phone}','%' )
+        </if>
+        <if test="department !=''">
+            AND sd.secdep LIKE CONCAT('%','${department}','%' )
+        </if>
+        <if test="serialnumber !=''">
+            AND u.serialnumber=#{serialnumber}
+        </if>
+        <if test="doctorname !=''">
+            AND u.nickname  LIKE CONCAT('%','${doctorname}','%' )
+        </if>
+
+
+        ORDER BY u.regTime DESC
+
+
+    </select>
+
+
+    <select id="findDepartmentNameByID" parameterType="string" resultType="string">
+
+        SELECT secdep
+        FROM `t_secdep`
+        where id = #{departmentID};
+    </select>
+
+
+    <delete id="deleteUserByPhone" parameterType="string">
+
+        delete
+        from t_user
+        where phone = #{phone}
+
+
+    </delete>
+
+    <delete id="deleteRoleOfUserByUserID" parameterType="string">
+
+        delete
+        from t_user_role
+        where userid = #{userID}
+
+    </delete>
+
+
+    <update id="editUser" parameterType="User">
+        UPDATE t_user
+        SET nickname=#{nickname},
+            age=#{age},
+            phone=#{phone},
+            serialnumber=#{serialnumber},
+            email=#{email},
+            maindepid=#{maindepid},
+            secdepid=#{secdepid},
+            gender=#{gender}
+        WHERE id = #{id};
+
+    </update>
+
+    <update id="updateUserStatus" parameterType="string">
+        UPDATE t_user
+        SET enabled=#{able}
+        WHERE phone = #{phone};
+    </update>
+
+    <update id="editUserPassword" parameterType="string">
+        UPDATE t_user
+        SET password=#{password},
+            salt=#{salt}
+        WHERE phone = #{userphone};
+    </update>
+
+
+</mapper>

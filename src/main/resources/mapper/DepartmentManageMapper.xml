@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aifurion.track.mapper.DepartmentManageMapper">
+
+
+    <resultMap id="doctorDepMap" type="DepartmentDoctorVO">
+        <id column="sid" property="secdepid"/>
+        <result column="sdep" property="secdep"/>
+        <collection property="doctorVOS" javaType="list" ofType="com.aifurion.track.entity.VO.DoctorVO">
+            <id column="uid" property="id"/>
+            <result column="nickname" property="nickname"/>
+        </collection>
+    </resultMap>
+
+    <select id="getDoctorDepartmentByRegistrarId" resultMap="doctorDepMap">
+
+        SELECT u.nickname nickname,
+               u.id       uid,
+               sd.id      sid,
+               sd.secdep  sdep
+        FROM t_user u
+                 LEFT JOIN t_secdep sd ON sd.id = u.secdepid
+        WHERE mainid = (SELECT u.maindepid FROM t_user u WHERE u.id = #{userid})
+    </select>
+
+
+</mapper>

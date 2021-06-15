@@ -1,205 +1,242 @@
-<!doctype html>
-<html lang="en"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<!DOCTYPE html>
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.default.css" id="theme-stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+    <link href="/css/animate.css" rel="stylesheet">
 
 </head>
+
 <body>
-<div class="page login-page">
-    <div class="container d-flex align-items-center">
-        <div class="form-holder has-shadow">
-            <div class="row">
-                <!-- Logo & Information Panel-->
-                <div class="col-lg-6">
-                    <div class="info d-flex align-items-center">
-                        <div class="content">
-                            <div class="logo">
-                                <h1>欢迎注册</h1>
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+    <div class="container-fluid" style="margin-left: 500px;margin-right: 500px">
+
+        <div class="row" style="margin-top:15px;">
+            <div class="col-lg-12">
+                <div class="card">
+                    <ul class="nav nav-tabs page-tabs">
+                        <li class="active" style="margin-left: 20%"><a href="#">就诊者</a></li>
+                        <li style="margin-left: 40%"><a href="/auth/doctorRegister">医护人员</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+
+                            <div name="edit-form" class="edit-form">
+                                <div class="form-group">
+                                    <label for="phone">11位手机号</label>
+                                    <input class="form-control" type="text" id="phone" name="phone"
+                                           placeholder="手机号">
+
+                                    <div class="invalid-feedback" id="invalid-num" hidden>
+                                        手机号必须为11位！
+                                    </div>
+                                    <div class="invalid-feedback" id="invalid-exit" hidden>
+                                        用户名已存在！
+                                    </div>
+                                    <div class="invalid-feedback" id="invalid-alert" hidden>
+                                        请正确输入手机号！
+                                    </div>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="nickname">姓名</label>
+                                    <input class="form-control" type="text" id="nickname" name="nickname"
+                                           placeholder="姓名">
+
+                                    <div class="invalid-feedback" id="invalid-name" hidden>
+                                        名字长度不能小于1位！
+                                    </div>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">密码</label>
+                                    <input class="form-control" type="password" id="password" name="password">
+
+                                    <div class="invalid-feedback" id="invalid-pwd" hidden>
+                                        密码长度大于6位！
+                                    </div>
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary m-r-5" id="regbtn">注 册</button>
+                                    <button type="button" class="btn btn-default"
+                                            onclick="javascript:history.back(-1);return false;">返 回
+                                    </button>
+                                </div>
                             </div>
+
                         </div>
                     </div>
-                </div>
-                <!-- Form Panel    -->
-                <div class="col-lg-6 bg-white">
-                    <div class="form d-flex align-items-center">
-                        <div class="content">
-                            <div class="form-group">
-                                <input id="register-username" class="input-material" type="text"
-                                       name="username"
-                                       placeholder="请输入用户名/姓名">
-                                <div class="invalid-feedback" id="invalid-num">
-                                    用户名必须在2~10位之间
-                                </div>
-                                <div class="invalid-feedback" id="invalid-exit">
-                                    用户名已存在！
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input id="register-password" class="input-material" type="password" name="password"
-                                       placeholder="请输入密码">
-                                <div class="invalid-feedback">
-                                    密码必须在6~10位之间
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input id="register-passwords" class="input-material" type="password" name="passwords"
-                                       placeholder="确认密码">
-                                <div class="invalid-feedback">
-                                    两次密码必须相同 且在6~10位之间
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <button id="regbtn" type="button" name="registerSubmit" class="btn btn-primary">注册
-                                </button>
-                            </div>
-                            <small>已有账号?</small><a href="/auth/login" class="signup">&nbsp;登录</a>
-                        </div>
-                    </div>
+
                 </div>
             </div>
+
         </div>
+
     </div>
-</div>
-<!-- JavaScript files-->
+
+</main>
+<!--End 页面主要内容-->
+
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
+
+
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
 <script>
 
 
     $(function () {
-        /*错误class  form-control is-invalid
-        正确class  form-control is-valid*/
+        var flagPhone = false;
+        var flagPwd = false;
         var flagName = false;
-        var flagPas = false;
-        var flagPass = false;
+
+        var phoneNum;
+        var pwd;
+        var nickName;
+
 
         /*验证用户名*/
-        var name, passWord, passWords;
-        $("#register-username").change(function () {
-
-            document.getElementById('invalid-num').style.display = '';
-            document.getElementById('invalid-exit').style.display = '';
-
+        $("#phone").change(function () {
 
             /*判断用户名长度*/
 
-            name = $("#register-username").val();
-            if (name.length < 2 || name.length > 10) {
+            $("#invalid-num").hide();
+            $("#invalid-alert").hide();
+            $("#invalid-exit").hide();
 
-                document.getElementById('invalid-exit').style.display = 'none';
 
-                $("#register-username").removeClass("form-control is-valid");
-                $("#register-username").addClass("form-control is-invalid");
-                flagName = false;
+            phoneNum = $("#phone").val();
+            if (phoneNum.length !== 11) {
+
+
+                $("#invalid-exit").hide();
+                $("#invalid-alert").hide();
+                $("#invalid-num").show();
+                flagPhone = false;
             } else {
 
                 /*判断用户名是否存在*/
-
-                document.getElementById('invalid-num').style.display = 'none';
                 $.ajax({
                     type: "post",
                     url: "/auth/ifUsernameExit",
                     async: true,
                     data: {
-                        "username": name
+                        "phone": phoneNum.trim()
                     },
                     success: function (r) {
                         if (r.code === 200) {
-                            $("#register-username").removeClass("form-control is-invalid");
-                            $("#register-username").addClass("form-control is-valid");
-
-                            flagName = true;
+                            flagPhone = true;
                         } else {
 
-                            $("#register-username").removeClass("form-control is-valid");
-                            $("#register-username").addClass("form-control is-invalid");
+                            $("#invalid-num").hide();
 
-                            flagName = false;
+                            $("#invalid-alert").hide();
+
+
+                            $("#invalid-exit").show();
+                            flagPhone = false;
                         }
                     }
                 });
             }
         })
-        /*验证密码*/
-        $("#register-password").change(function () {
-            passWord = $("#register-password").val();
-            if (passWord.length < 6 || passWord.length > 18) {
-                $("#register-password").removeClass("form-control is-valid")
-                $("#register-password").addClass("form-control is-invalid");
-                flagPas = false;
+
+
+        $("#nickname").change(function () {
+
+            nickName = $("#nickname").val();
+            $("#invalid-name").hide();
+            if (nickName.length < 2) {
+                $("#invalid-name").show();
+                flagName = false;
             } else {
-                $("#register-password").removeClass("form-control is-invalid")
-                $("#register-password").addClass("form-control is-valid");
-                flagPas = true;
+                flagName = true;
             }
-        })
-        /*验证确认密码*/
-        $("#register-passwords").change(function () {
-            passWords = $("#register-passwords").val();
-            if ((passWord != passWords) || (passWords.length < 6 || passWords.length > 18)) {
-                $("#register-passwords").removeClass("form-control is-valid")
-                $("#register-passwords").addClass("form-control is-invalid");
-                flagPass = false;
+
+        });
+
+
+        $("#password").change(function () {
+
+            pwd = $("#password").val();
+
+            $("#invalid-pwd").hide();
+
+            if (pwd.length < 6) {
+
+                $("#invalid-pwd").show();
+                flagPwd = false;
+
             } else {
-                $("#register-passwords").removeClass("form-control is-invalid")
-                $("#register-passwords").addClass("form-control is-valid");
-                flagPass = true;
+                flagPwd = true;
             }
-        })
+
+        });
 
 
         $("#regbtn").click(function () {
-            if (flagName && flagPas && flagPass) {
-                localStorage.setItem("name", name);
-                localStorage.setItem("passWord", passWord);
+
+            tips.loading('show');
+
+
+            if (flagPhone && flagPwd && flagName) {
 
 
                 $.ajax({
                     type: "post",
-                    url: "/auth/register",
+                    url: "/auth/register/3",
                     data: {
-                        "username": name,
-                        "password": passWord
+                        "phone": phoneNum.trim(),
+                        "password": pwd,
+                        "nickname": nickName.trim()
                         /*"validateCode": validateCode,
                         "rememberMe": rememberMe*/
                     },
                     success: function (r) {
 
                         if (r.code === 200) {
-                            location.href = "/auth/login";
+
+                            tips.loading('hide');
+                            tips.notify('注册成功，返回登录界面！', 'success', 3000);
+                            self.location = document.referrer;
+
                         } else {
-                            alert(r.msg);
+                            tips.loading('hide');
+                            tips.notify(r.msg, 'danger', 100);
 
                         }
 
                     }
                 });
-
-
             } else {
-                if (!flagName) {
-                    $("#register-username").addClass("form-control is-invalid");
-                }
-                if (!flagPas) {
-                    $("#register-password").addClass("form-control is-invalid");
-                }
-                if (!flagPass) {
-                    $("#register-passwords").addClass("form-control is-invalid");
-                }
+                tips.loading('hide');
+                tips.notify("请以正确格式输入密码", 'danger', 100);
             }
-
-
         });
-    })
+    });
+
+
 </script>
+
+
 </body>
 </html>

@@ -1,0 +1,168 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+
+    <link href="/css/search-button.css" rel="stylesheet">
+
+    <link href="/css/animate.css" rel="stylesheet">
+</head>
+
+<body>
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+    <div class="container-fluid" style="margin-bottom:90px;">
+
+        <div class="row" style="margin-top:15px;">
+            <div class="col-lg-12">
+
+
+                <div class="card">
+
+                    <div id="search">
+                        <div id="search-wrap" style="margin-top: 24px">
+                            <select class="search-choise" id="search-select">
+                                <option value="nickname">名字</option>
+                                <option value="age">年龄</option>
+                                <option value="department">科室</option>
+                                <option value="phone">手机号</option>
+                            </select>
+                            <input class="search-content" type="text" placeholder="输入搜索内容" id="search-input"
+                                   name="search-input">
+                            <button class="search-btn" type="button" id="search-button">搜索</button>
+                        </div>
+                    </div>
+
+
+                    <div class="card-toolbar clearfix" style="margin-left: 600px">
+
+                        <div class="toolbar-btn-action">
+
+                            <a class="btn btn-primary m-r-5 submenuitem" href="/auth/doctorRegister"
+                               data-id="link552"
+                               data-index="552"> 新增</a>
+                            <a class="btn btn-success m-r-5 submenuitem" id="enable-check" onclick="ableCheck(1,2)"
+                               data-id="link553"
+                               data-index="553"> 启用</a>
+                            <a class="btn btn-warning m-r-5 submenuitem" id="disable-check" onclick="ableCheck(0,2)"
+                               data-id="link554"
+                               data-index="554"> 禁用</a>
+                            <a class="btn btn-warning m-r-5 submenuitem" id="reset-pwd" onclick="resetPwd(2)"
+                               data-id="link554"
+                               data-index="554"> 重置密码</a>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th width="5">
+                                        <label class="ftdms-checkbox checkbox-primary">
+                                            <input type="checkbox" id="check-all"><span></span>
+                                        </label>
+                                    </th>
+                                    <th>工号</th>
+                                    <th>电话</th>
+                                    <th>名字</th>
+                                    <th>年龄</th>
+                                    <th>科室</th>
+                                    <th>性别</th>
+                                    <th>被禁用?</th>
+                                    <th>注册时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="user:${users.list}">
+                                    <td>
+                                        <label class="ftdms-checkbox checkbox-primary">
+                                            <input type="checkbox" id="check-item" name="check-item" value="${user.id}"><span></span>
+                                        </label>
+                                    </td>
+                                    <td th:text="${user.serialnumber}"></td>
+                                    <td th:text="${user.phone}"></td>
+                                    <td th:text="${user.nickname}"></td>
+                                    <td th:text="${user.age}"></td>
+                                    <td th:text="${user.secdepid}"></td>
+                                    <td th:text="${user.gender}==0?'女':'男'"></td>
+                                    <td name="td_able" th:text="${user.enabled}==1?'否':'是'"></td>
+                                    <td th:text="${user.regTime}"></td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-xs btn-default submenuitem"
+                                               th:href="'/account/editdoctor/'+${user.getPhone()}"
+                                               target="_self" title="编辑" data-toggle="tooltip"><i
+                                                    class="ftsucai-edit-2"></i></a>
+
+                                            <a class="btn btn-xs btn-default submenuitem" id="deleteUser"
+                                               th:href="'/account/deleteuser/'+${user.getPhone()}"
+                                               target="_self" title="删除" data-toggle="tooltip"><i
+                                                    class="ftsucai-del-2"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="pagination no-border">
+                            <a href="/account/getusers?type=2" class="submenuitem">首页</a>
+                            <a th:href="@{/account/getusers(type=2,pageNum=${users.hasPreviousPage}?${users.prePage}:1)}"
+                               class="submenuitem">上一页</a>
+
+                            <b th:each="nav : ${users.navigatepageNums}">
+                                <a th:href="'/account/getusers?type=2&pageNum='+${nav}" th:text="${nav}"
+                                   th:if="${nav != users.pageNum}" class="submenuitem"></a>
+                                <span style="font-weight: bold;background: #6faed9;" th:if="${nav == users.pageNum}"
+                                      th:text="${nav}" class="submenuitem"></span>
+                            </b>
+
+
+                            <a th:href="@{/account/getusers(type=2,pageNum=${users.hasNextPage}?${users.nextPage}:${users.pages})}"
+                               class="submenuitem">下一页</a>
+                            <a th:href="@{/account/getusers(type=2,pageNum=${users.pages})}" class="submenuitem">尾页</a>
+
+                        </ul>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+<!--End 页面主要内容-->
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="/js/main.min.js"></script>
+<script type="text/javascript" src="/js/utils/ableCheck.js"></script>
+
+
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
+<script type="text/javascript" src="/js/utils/resetPwd.js"></script>
+
+<script type="text/javascript" src="/js/account/manage-doctor.js"></script>
+</body>
+</html>

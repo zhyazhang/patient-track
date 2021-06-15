@@ -1,0 +1,388 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <meta name="author" content="www.bootstrapmb.com">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <!--标签插件-->
+    <link rel="stylesheet" href="/js/jquery-tags-input/jquery.tagsinput.min.css">
+    <link href="/css/style.css" rel="stylesheet">
+
+    <link href="/css/animate.css" rel="stylesheet">
+
+    <!-- 滑块插件-->
+
+    <link rel="stylesheet" href="/js/ion-rangeslider/ion.rangeSlider.min.css">
+</head>
+
+<body>
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+    <div class="container-fluid" style="margin-bottom:190px;">
+
+        <div class="row" style="margin-top:15px;margin-left: 15px;margin-right: 15px;">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="patientname">病人姓名</label>
+                                <input type="text" th:value="${thecase.patientname}" class="form-control"
+                                       readonly="readonly"
+                                       id="patientname" name="patientname"/>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="doctorname">主治医生</label>
+                                <input type="text" th:value="${thecase.doctorname}" class="form-control" id="doctorname"
+                                       readonly="readonly"
+                                       name="doctorname"/>
+                            </div>
+
+
+                            <div class="form-group col-md-6">
+                                <label for="state">病人状况</label>
+
+                                <div class="m-b-10">
+                                    <input id="state">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+
+                                <label for="dep">科室</label>
+                                <div class="form-group col-md-12" id="dep" name="dep">
+
+                                    <div class="col-xs-12">
+                                        <select class="form-control" id="maindep-select" name="maindep-select"
+                                                size="1" onChange="nextChange()">
+                                        </select>
+                                    </div>
+
+                                    <div class="col-xs-12">
+                                        <select class="form-control" id="secdep-select" name="secdep-select"
+                                                size="1">
+                                        </select>
+                                    </div>
+
+                                    <div class="invalid-feedback" id="invalid-select" hidden>
+                                        请选择科室！
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+
+                                <label for="diagnosis">诊断结果</label>
+                                <textarea class="form-control" th:text="${thecase.diagnosis}" id="diagnosis"
+                                          name="diagnosis"
+                                          rows="4"></textarea>
+                            </div>
+                            <div class="form-group col-md-12">
+
+                                <label for="condition">病况</label>
+                                <textarea class="form-control" th:text="${thecase.condition}" id="condition"
+                                          name="condition"
+                                          rows="4"></textarea>
+                            </div>
+                            <div class="form-group col-md-12">
+
+                                <label for="treatment">治疗方式</label>
+                                <textarea class="form-control" th:text="${thecase.treatment}" id="treatment"
+                                          name="treatment"
+                                          rows="4"></textarea>
+                            </div>
+
+                            <div class="form-group col-md-4">
+
+                                <label for="hosp">住院？</label>
+                                <div class="example-box" id="hosp">
+                                    <label class="ftdms-radio radio-inline radio-primary">
+                                        <input type="radio" name="hospitalized" th:value="1"
+                                               th:field="${thecase.hospitalized}"><span>是</span>
+                                    </label>
+                                    <label class="ftdms-radio radio-inline radio-primary">
+                                        <input type="radio" name="hospitalized" th:value="0"
+                                               th:field="${thecase.hospitalized}"><span>否</span>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div>
+                                <label for="ward">选择病床</label>
+                                <div id="ward">
+                                    <div class="form-group col-md-4">
+                                        <div class="col-xs-12">
+                                            <select class="form-control" id="building-select" name="building-select"
+                                                    size="1" onchange="buildingChange()">
+
+                                            </select>
+                                        </div>
+
+                                        <div class="col-xs-12">
+                                            <select class="form-control" id="floor-select" name="floor-select"
+                                                    size="1" onchange="floorChange()">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <div class="col-xs-12">
+                                            <select class="form-control" id="room-select" name="room-select"
+                                                    size="1" onchange="roomChange()">
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <select class="form-control" id="bed-select" name="bed-select"
+                                                    size="1">
+                                            </select>
+                                        </div>
+
+                                        <div class="invalid-feedback" id="ward-select" hidden>
+                                            请选择病床！
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <label for="createTime">诊断时间</label>
+                                <input type="text" th:value="${thecase.createTime}" class="form-control"
+                                       id="createTime"
+                                       readonly="readonly"
+                                       name="createTime"/>
+                            </div>
+
+
+                            <div class="form-group col-md-12" id="updatebtn">
+                                <shiro:hasRole name="doctor">
+                                    <button id="regbtn" class="btn btn-primary ajax-post">修 改
+                                    </button>
+                                </shiro:hasRole>
+                                <button type="button" class="btn btn-default"
+                                        onclick="javascript:history.back(-1);return false;">返 回
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<!--End 页面主要内容-->
+</div>
+</div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+<!--标签插件-->
+<script src="/js/jquery-tags-input/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="/js/main.min.js"></script>
+
+<script src="/js/ion-rangeslider/ion.rangeSlider.min.js"></script>
+
+
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+<script type="text/javascript" src="/js/ward/ward-select.js"></script>
+
+<script th:inline="javascript">
+    var thecase = [[${thecase}]];
+    var ward = [[${ward}]];
+    var buildings = [[${buildings}]];
+    var rolesName = [[${rolesName}]];
+    var state = [[${state}]];
+
+
+    $(function () {
+        var first = document.getElementById("maindep-select");
+        var second = document.getElementById("secdep-select");
+
+        var buildingSelect = document.getElementById("building-select");
+        var floorSelect = document.getElementById("floor-select");
+        var roomSelect = document.getElementById("room-select");
+        var bedSelect = document.getElementById("bed-select");
+
+        first.options.add(new Option(thecase.maindepname, thecase.maindepid));
+        second.options.add(new Option(thecase.secdepname, thecase.secdepid));
+
+        console.log(ward);
+
+        if (state === '2') {
+            $('#updatebtn').hide();
+        }
+
+
+        if (thecase.hospitalized === '1' || thecase.hospitalized === 1) {
+
+
+            initBuilding(buildings);
+
+            $("#building-select").find("option[value=" + ward.building + "]").attr("selected", true);
+
+            floorSelect.options.add(new Option(ward.floor + " 层", ward.floor));
+            roomSelect.options.add(new Option(ward.room + " 号房间", ward.room));
+            bedSelect.options.add(new Option(ward.bed + " 号床位", ward.bed));
+
+        } else {
+            buildingSelect.options.add(new Option('选择楼号', -1));
+            floorSelect.options.add(new Option('选择层号', -1));
+            roomSelect.options.add(new Option('选择房间号', -1));
+            bedSelect.options.add(new Option('选择床位', -1));
+            initBuilding(buildings);
+
+
+        }
+
+        if (rolesName === 'patient') {
+            initDisable();
+        }
+
+
+        $("#state").ionRangeSlider({
+            grid: true,
+            from: state,
+            values: [
+                "刚开始", "治疗中", "治疗结束"
+            ]
+        });
+
+        $("#regbtn").click(function () {
+
+            var state;
+            var diagnosis;
+            var condition;
+            var treatment;
+            var flagWard = false;
+            var hospitalized;
+            var flag = false;
+
+            var building = $("#building-select").val();
+            var floor = $("#floor-select").val();
+            var room = $("#room-select").val();
+            var bed = $("#bed-select").val();
+
+            console.log('building' + building + 'floor' + floor + 'room' + room + 'bed');
+
+            flagWard = !(building === '-1' || floor === '-1' || room === '-1' || bed === '-1');
+
+            hospitalized = $("input[name='hospitalized']:checked").val();
+
+            state = $("#state").val();
+
+            switch (state) {
+                case "刚开始":
+                    state = 0;
+                    break;
+                case "治疗中":
+                    state = 1;
+                    break;
+                case "治疗结束":
+                    state = 2;
+                    break;
+            }
+
+
+            diagnosis = $("#diagnosis").val();
+            condition = $("#condition").val();
+            treatment = $("#treatment").val();
+
+
+            if (hospitalized === '0' || (hospitalized === '1' && flagWard)) {
+                flag = true;
+            }
+
+            if (ward === null) {
+                wardId = -1;
+            } else {
+                wardId = ward.id;
+            }
+
+
+            if (flag) {
+                tips.loading('show');
+                $.ajax({
+                    type: "post",
+                    url: "/case/update",
+                    data: {
+                        "id": thecase.caseid,
+                        "state": state,
+                        "diagnosis": diagnosis,
+                        "condition": condition,
+                        "treatment": treatment,
+                        "hospitalized": hospitalized,
+                        "building": building,
+                        "floor": floor,
+                        "room": room,
+                        "bed": bed,
+                        "wardId": wardId
+                    },
+                    success: function (r) {
+
+                        if (r.code === 200) {
+                            tips.loading('hide');
+                            tips.notify(r.msg, 'success', 3000);
+
+                        } else {
+
+                            tips.loading('hide');
+                            tips.notify(r.msg, 'danger', 100);
+
+                        }
+                        window.location.reload();
+
+                    }
+                });
+            } else {
+                tips.notify("请选择病房", 'danger', 1000);
+            }
+
+
+        });
+
+        function initBuilding(buildings) {
+
+            for (let i = 0; i < buildings.length; i++) {
+                buildingSelect.options.add(new Option(buildings[i] + " 栋", buildings[i]));
+            }
+
+
+        }
+
+
+        function initDisable() {
+            $("#building-select").attr("disabled", "disabled");
+            $("#floor-select").attr("disabled", "disabled");
+            $("#room-select").attr("disabled", "disabled");
+            $("#bed-select").attr("disabled", "disabled");
+        }
+
+
+    });
+
+
+</script>
+</body>
+</html>

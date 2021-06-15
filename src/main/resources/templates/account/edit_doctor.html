@@ -1,0 +1,519 @@
+﻿<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <!--标签插件-->
+    <link rel="stylesheet" href="/js/jquery-tags-input/jquery.tagsinput.min.css">
+    <link href="/css/style.css" rel="stylesheet">
+
+    <link href="/css/animate.css" rel="stylesheet">
+
+
+    <!--对话框-->
+    <link rel="stylesheet" href="/js/jconfirm/jquery-confirm.min.css">
+</head>
+
+<body>
+<!--页面主要内容-->
+<main class="ftdms-layout-content">
+
+    <div class="container-fluid" style="margin-bottom:90px;">
+
+        <div class="row" style="margin-top:15px;margin-left: 300px;margin-right: 400px">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="form-group col-md-12">
+                                <label for="nickname">姓名</label>
+                                <input type="text" th:value="${user.nickname}" class="form-control" id="nickname"
+                                       name="nickname"/>
+
+                                <div class="invalid-feedback" id="invalid-name" hidden>
+                                    名字长度不能小于1位！
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <label for="age">年龄</label>
+                                <input type="text" th:value="${user.age}" class="form-control" id="age"
+                                       name="age"/>
+                                <div class="invalid-feedback" id="invalid-age" hidden>
+                                    年龄大于0，小于150，且必须是数字！
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <label for="phone">手机号</label>
+                                <input type="text" th:value="${user.phone}" class="form-control" id="phone"
+                                       name="phone"/>
+                                <div class="invalid-feedback" id="invalid-num" hidden>
+                                    手机号必须为11位！
+                                </div>
+                                <div class="invalid-feedback" id="invalid-exit" hidden>
+                                    手机号已被注册！
+                                </div>
+                                <div class="invalid-feedback" id="invalid-alert" hidden>
+                                    请正确输入手机号！
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <label for="serialnumber">工号</label>
+                                <input type="text" th:value="${user.serialnumber}" class="form-control"
+                                       id="serialnumber"
+                                       name="serialnumber"/>
+
+                                <div class="invalid-feedback" id="invalid-serial" hidden>
+                                    工号位8位数字！
+                                </div>
+
+                                <div class="invalid-feedback" id="invalid-serialexit" hidden>
+                                    工号已被注册！
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <label for="email">邮箱</label>
+                                <input type="text" th:value="${user.email}" class="form-control" id="email"
+                                       name="email"/>
+
+                                <div class="invalid-feedback" id="invalid-mail" hidden>
+                                    请输入正确的邮箱格式 example@xxx.com
+                                </div>
+
+
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="dep">选择科室</label>
+                                <div class="form-group col-md-12" id="dep" name="dep">
+
+                                    <div class="col-xs-12">
+                                        <select class="form-control" id="maindep-select" name="maindep-select"
+                                                size="1" onChange="nextChange()">
+                                        </select>
+                                    </div>
+
+                                    <div class="col-xs-12">
+                                        <select class="form-control" id="secdep-select" name="secdep-select"
+                                                size="1">
+                                        </select>
+                                    </div>
+
+                                    <div class="invalid-feedback" id="invalid-select" hidden>
+                                        请选择科室！
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+
+
+                                <!--thymeleaf的radio回显-->
+                                <label for="form-check">性别</label>
+                                <div class="example-box">
+                                    <label class="ftdms-radio radio-inline radio-primary">
+                                        <input type="radio" name="gender" th:value="1"
+                                               th:field="${user.gender}"><span>男</span>
+                                    </label>
+                                    <label class="ftdms-radio radio-inline radio-primary">
+                                        <input type="radio" name="gender" th:value="0"
+                                               th:field="${user.gender}"><span>女</span>
+                                    </label>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <label for="form-regtime">注册时间</label>
+                                <input type="text" th:value="${user.regTime}" class="form-control" id="form-regtime"
+                                       readonly="readonly"
+                                       name="form-regtime"/>
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <button id="regbtn" class="btn btn-primary ajax-post regbtn">修 改
+                                </button>
+                                <!--<button type="button" class="btn btn-default"
+                                        onclick="javascript:history.back(-1);return false;">返 回
+                                </button>-->
+                            </div>
+
+                            <span id="dep-data" th:text="${departments}" th:hidden="true"></span>
+                            <span id="user-data" th:text="${user}" th:hidden="true"></span>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <span th:value="${theRoleId}" hidden id="theRoleId"></span>
+
+    </div>
+
+</main>
+<!--End 页面主要内容-->
+</div>
+</div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.js"></script>
+<script type="text/javascript" src="/js/perfect-scrollbar.min.js"></script>
+<!--标签插件-->
+<script src="/js/jquery-tags-input/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="/js/main.min.js"></script>
+
+
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
+<!--对话框-->
+<script src="/js/jconfirm/jquery-confirm.min.js"></script>
+
+<!--<script type="text/javascript" src="/js/account/edit-doctor.js"></script>-->
+<script th:inline="javascript">
+    var departments = [[${departments}]];
+    var user = [[${user}]];
+    var theRoleId = [[${theRoleId}]];
+
+    var flagPhone = true;
+    var flagSerial = true;
+    var flagAge = true;
+
+
+    $(function () {
+
+
+        var phoneNum;
+        var serialnumber;
+
+        <!--加载的科室-->
+
+        var miandepid = user.maindepid;
+        var secdepid = user.secdepid;
+        var maindep = departments[miandepid - 1].maindep;
+        var secdeplist = departments[miandepid - 1].secDepartments;
+        var secdep;
+        for (var i = 0; i < secdeplist.length; i++) {
+
+            if (secdepid === secdeplist[i].id) {
+                secdep = secdeplist[i].secdep;
+            }
+        }
+
+        var first = document.getElementById("maindep-select");
+        var second = document.getElementById("secdep-select");
+        first.options.add(new Option(maindep, miandepid));
+        second.options.add(new Option(secdep, secdepid));
+
+
+        <!--设置doctor的科室-->
+
+        for (var i = 0; i < departments.length; i++) {
+            if (i !== (miandepid - 1)) {
+                first.options.add(new Option(departments[i].maindep, departments[i].id));
+            }
+        }
+
+        for (var i = 0; i < secdeplist.length; i++) {
+            second.options.add(new Option(secdeplist[i].secdep, secdeplist[i].id));
+        }
+
+    });
+
+
+    $("#age").change(function () {
+
+        $("#invalid-age").hide();
+        var age = $("#age").val();
+
+        if (!num(age) || age > 150 || age < 0) {
+            $("#invalid-age").show();
+            flagAge = false;
+        } else {
+            flagAge = true;
+        }
+
+
+    });
+
+    function num(value) {
+        var n = /^[0-9]*$/;
+        var re = new RegExp(n);
+        if (re.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    $("#serialnumber").change(function () {
+
+        serialnumber = $("#serialnumber").val();
+        $("#invalid-serial").hide();
+        $("#invalid-serialexit").hide();
+
+
+        if (!num(serialnumber)) {
+            tips.notify("请输入数字！", 'danger', 1000);
+            flagSerial = false;
+        }
+
+
+        if (serialnumber.length !== 8) {
+
+            $("#invalid-serial").show();
+            flagSerial = false;
+
+        } else {
+
+            $("#invalid-serial").hide();
+
+            if (serialnumber !== user.serialnumber) {
+                $.ajax({
+                    type: "post",
+                    url: "/auth/ifSerialNumberExit",
+                    async: true,
+                    data: {
+                        "number": serialnumber
+                    },
+                    success: function (r) {
+                        if (r.code === 200) {
+                            flagSerial = true;
+                        } else {
+                            $("#invalid-serialexit").show();
+                            flagSerial = false;
+                        }
+                    }
+                });
+
+            } else {
+                flagSerial = true;
+            }
+
+
+        }
+
+    });
+
+
+    /*验证用户名*/
+    $("#phone").change(function () {
+
+        /*判断用户名长度*/
+
+        $("#invalid-num").hide();
+        $("#invalid-alert").hide();
+        $("#invalid-exit").hide();
+
+
+        phoneNum = $("#phone").val();
+
+
+        if (!num(phoneNum)) {
+            tips.notify("请输入数字！", 'danger', 1000);
+            flagPhone = false;
+        }
+
+        if (phoneNum.length !== 11) {
+
+            $("#invalid-exit").hide();
+
+            $("#invalid-alert").hide();
+
+            $("#invalid-num").show();
+            flagPhone = false;
+        } else {
+
+            /*判断用户名是否存在*/
+
+
+            if (phoneNum !== user.phone) {
+
+                $.ajax({
+                    type: "post",
+                    url: "/auth/ifUsernameExit",
+                    async: true,
+                    data: {
+                        "phone": phoneNum
+                    },
+                    success: function (r) {
+                        if (r.code === 200) {
+                            flagPhone = true;
+                        } else {
+                            $("#invalid-num").hide();
+                            $("#invalid-alert").hide();
+                            $("#invalid-exit").show();
+                            flagPhone = false;
+                        }
+                    }
+                });
+
+
+            } else {
+                flagPhone = true;
+            }
+
+
+        }
+    })
+
+
+    <!--选择框二级联动-->
+
+    function nextChange() {
+
+        var second = document.getElementById("secdep-select");
+        second.options.length = 0;
+
+        <!--获取选中的option的value-->
+
+        var maindepid = $('#maindep-select option:selected').val();
+        secdepartment = departments[maindepid - 1].secDepartments;
+
+        for (var i = 0; i < secdepartment.length; i++) {
+            second.options.add(new Option(secdepartment[i].secdep, secdepartment[i].id));
+        }
+
+    }
+
+
+    function editInfo() {
+
+        var nickname;
+        var age = null;
+        var phone;
+        var serialnumber;
+        var email;
+        var maindepid;
+        var secdepid;
+        var gender;
+
+
+        nickname = $("#nickname").val();
+        phone = $("#phone").val();
+        age = $("#age").val();
+        serialnumber = $("#serialnumber").val();
+        email = $("#email").val();
+
+        //获取select选中的option的value
+        maindepid = $('#maindep-select option:selected').val();
+        secdepid = $('#secdep-select option:selected').val();
+
+
+        if (secdepid === '' || secdepid === null || secdepid === 'null') {
+
+            secdepid = 0;
+        }
+
+        //获取选中的radio的value
+        gender = $('input:radio:checked').val();
+
+        tips.loading('show');
+
+
+        if (flagPhone && flagSerial && flagAge) {
+
+            $.ajax({
+                type: "post",
+                url: "/account/edituser",
+                data: {
+                    "id": user.id,
+                    "nickname": nickname,
+                    "age": age,
+                    "phone": phone,
+                    "serialnumber": serialnumber,
+                    "email": email,
+                    "maindepid": maindepid,
+                    "secdepid": secdepid,
+                    "gender": gender
+                },
+                success: function (r) {
+                    tips.loading('hide');
+                    tips.notify("修改成功，请重新登录！", 'success', 1000);
+                    window.open('/auth/logout', '_top');
+                }
+            });
+
+
+        } else {
+            tips.loading('hide');
+            tips.notify("请以正确格式输入！", 'danger', 1000);
+
+
+        }
+
+
+    }
+
+    $("#regbtn").click(function () {
+
+
+        if (theRoleId !== 1 && theRoleId !== "1") {
+
+            $.confirm({
+                title: '重要提示',
+                content: '修改账号信息后，将会重新登录',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    tryAgain: {
+                        text: '确定',
+                        btnClass: 'btn-red',
+                        action: function () {
+                            editInfo();
+                        }
+                    },
+                    close: {
+                        text: '关闭'
+                    }
+                }
+            });
+
+        } else {
+            editInfo();
+        }
+
+
+    });
+
+
+</script>
+
+
+</body>
+</html>

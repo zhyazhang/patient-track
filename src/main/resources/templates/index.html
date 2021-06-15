@@ -1,104 +1,483 @@
-<!doctype html>
-<html lang="en"
+﻿<html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="format-detection" content="telephone=no">
-    <title>Blog</title>
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/clickJS.js"></script>
-    <!--[if lt IE 9]>
-    <script src="/js/html5.min.js"></script>
-    <script src="/js/respond.min.js"></script>
-    <![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>病人跟踪治疗信息管理系统</title>
+    <link rel="icon" href="favicon.ico" type="image/ico">
+    <meta name="keywords" content="病人跟踪治疗信息管理系统">
+    <meta name="description" content="病人跟踪治疗信息管理系统">
+
+    <link rel="icon" href="favicon.ico" type="/image/ico">
+    <link href="/css/style.css" rel="stylesheet">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/css/common.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/slide.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/flat-ui.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/jquery.nouislider.css">
+    <link href="/css/theme.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
+    <script src="/js/framework.js"></script>
+
+    <link href="/css/animate.css" rel="stylesheet">
 
 
-    <script>
-
-        $(function () {
-            $('.meun-item-active').click();
-
-        });
-
-
-    </script>
 </head>
-<body>
-<div id="wrap">
-    <!-- 左侧菜单栏目块 -->
-    <div class="leftMeun" id="leftMeun">
-        <div id="logoDiv">
-            <p id="logoP">
-                <img
-                        id="logo"
-                        alt="左右结构项目"
-                        onclick=location.reload(true)
-                        src="/images/logo.png">
-                <span>Blog</span>
-            </p>
-        </div>
-        <div id="personInfor">
-            <p>
-                <a href="/auth/logout">退出登录</a>
-            </p>
-        </div>
-        <div class="meun-title">账号管理</div>
 
-        <div class="meun-item meun-item-active" value="/account/homepage" role="tab" data-toggle="tab">
-            <img src="/images/icon_chara_grey.png">个人主页
-        </div>
-
-        <div class="meun-item" value="/account/personal" role="tab" data-toggle="tab">
-            <img src="/images/icon_source.png">个人信息
-        </div>
-
-
-        <div class="meun-title">文章管理</div>
-        <div class="meun-item " value="/article/list" role="tab" data-toggle="tab">
-            <img src="/images/icon_house_grey.png">文章列表
-        </div>
-        <div class="meun-item " value="/article/publish" role="tab" data-toggle="tab">
-            <img src="/images/icon_rule_grey.png">发表文章
-        </div>
-
-
-        <shiro:hasRole name="admin">
-
-            <div class="meun-title">用户管理</div>
-            <div class="meun-item " value="/user/manage" role="tab" data-toggle="tab">
-                <img src="/images/icon_char_grey.png">用户管理
-            </div>
-
-        </shiro:hasRole>
-
-
-        <div class="meun-title">栏目管理</div>
-
-        <div class="meun-item " value="/programa/programa" role="tab" data-toggle="tab">
-            <img src="/images/icon_card_grey.png">栏目管理
-        </div>
-
+<body class="theme-blue-gradient pace-done" style="overflow: hidden;">
+<div class="pace  pace-inactive">
+    <div class="pace-progress" style="width: 100%;" data-progress-text="100%" data-progress="99">
+        <div class="pace-progress-inner"></div>
     </div>
-
-
-    <!-- 右侧具体内容栏目 -->
-    <div id="rightContent">
-
-    </div>
-
-
+    <div class="pace-activity"></div>
 </div>
+<div id="ajax-loader"
+     style="background: rgb(255, 255, 255); left: -50%; top: -50%; width: 200%; height: 200%; overflow: hidden; display: none; position: fixed; z-index: 10000; cursor: progress;">
+    <img style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto;" src="/images/loader.gif">
+</div>
+<div id="theme-wrapper">
+    <header class="navbar" id="header-navbar">
+        <div class="container" style="padding-right: 0px;">
+            <a class="navbar-brand" id="logo" href="#">病人跟踪信息管理系统</a>
+            <div class="clearfix">
+                <div class="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
+                    <ul class="nav navbar-nav pull-left">
+                        <li>
+                            <a id="make-small-nav">
+                                <div class="ftdms-aside-toggler">
+                                    <span class="ftdms-toggler-bar"></span>
+                                    <span class="ftdms-toggler-bar"></span>
+                                    <span class="ftdms-toggler-bar"></span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="nav-no-collapse pull-right" id="header-nav">
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="dropdown profile-dropdown">
+                            <a class="dropdown" href="#" data-toggle="dropdown">
+                                <!-- <img class="img-qrcode img-qrcode-46" src="/images/ftsucai.png" alt="用户头像" /> -->
+                                <span class="hidden-xs" th:text="'正在登录的用户: '+${roleName}"></span></a>
+                            <ul class="dropdown-menu pull-right">
+
+                                <shiro:hasAnyRoles name="admin,doctor,registrar">
+                                    <li>
+                                        <a class="submenuitem" th:href="'/account/editdoctor/'+${user.phone}"
+                                           data-id="rofile"
+                                           data-index="100"><i class="ft ftsucai-58"></i>个人信息</a>
+                                    </li>
+                                </shiro:hasAnyRoles>
+
+                                <shiro:hasRole name="patient">
+                                    <li>
+                                        <a class="submenuitem" th:href="'/account/editpatient/'+${user.phone}"
+                                           data-id="rofile"
+                                           data-index="100"><i class="ft ftsucai-58"></i>个人信息</a>
+                                    </li>
+                                </shiro:hasRole>
+
+
+                                <li>
+                                    <a class="submenuitem" href="/account/editpwd" data-id="linkpwd"
+                                       data-index="101"><i class="ft ftsucai-edit-2"></i>修改密码</a>
+                                </li>
+                                <li>
+                                    <a href="/auth/logout"><i class="ft ftsucai-exit2"></i>安全退出</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="container" id="page-wrapper">
+        <div class="row">
+            <div id="nav-col">
+                <section class="col-left-nano" id="col-left">
+                    <div class="col-left-nano-content" id="col-left-inner">
+                        <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    <a class="dropdown-toggle" href="" data-id="a1">
+                                        <i class="ft ftsucai-82"></i>
+                                        <span>系统首页</span>
+                                        <i class="ft ftsucai-139 drop-icon"></i>
+                                    </a>
+                                </li>
+
+
+                                <shiro:hasAnyRoles name="admin,registrar">
+
+                                    <li>
+                                        <a class="dropdown-toggle" href="#" data-id="a2">
+                                            <i class="ft ftsucai-UI"></i>
+                                            <span>账号管理</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem" href="/account/getusers?type=2" data-id="link1"
+                                                   data-index="1">医护人员管理</a>
+                                            </li>
+
+                                            <shiro:hasRole name="admin">
+                                                <li>
+                                                    <a class="submenuitem" href="/account/getusers?type=4"
+                                                       data-id="link2"
+                                                       data-index="2">挂号员管理</a>
+                                                </li>
+                                            </shiro:hasRole>
+
+                                            <li>
+                                                <a class="submenuitem" href="/account/getusers?type=3" data-id="link3"
+                                                   data-index="3">病人信息管理</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+
+
+                                    <li>
+                                        <a class="dropdown-toggle" href="#" data-id="a2">
+                                            <i class="ft ftsucai-UI"></i>
+                                            <span>病例</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+
+                                            <shiro:hasRole name="registrar">
+                                                <li>
+                                                    <a class="submenuitem" href="/case/manage" data-id="link1"
+                                                       data-index="1">今日挂号</a>
+                                                </li>
+
+                                            </shiro:hasRole>
+
+
+                                            <li>
+                                                <a class="submenuitem" href="/case/manage?type=all" data-id="link1"
+                                                   data-index="2">正在治疗</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+
+                                    <shiro:hasRole name="admin">
+
+                                        <li>
+                                            <a class="dropdown-toggle" href="#" data-id="a2">
+                                                <i class="ft ftsucai-UI"></i>
+                                                <span>通知管理</span>
+                                                <i class="ft ftsucai-139 drop-icon"></i>
+                                            </a>
+                                            <ul class="submenu">
+                                                <li>
+                                                    <a class="submenuitem" href="/notice/notices"
+                                                       data-id="link1"
+                                                       data-index="1">通知管理</a>
+                                                </li>
+                                                <li>
+                                                    <a class="submenuitem" href="/notice/toAdd"
+                                                       data-id="link1"
+                                                       data-index="1">添加通知</a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                    </shiro:hasRole>
+
+                                    <li>
+                                        <a class="dropdown-toggle" href="#" data-id="a2">
+                                            <i class="ft ftsucai-ic_home"></i>
+                                            <span>住院病人</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem" href="/ward/view"
+                                                   data-id="link1"
+                                                   data-index="1">住院病人</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <shiro:hasRole name="registrar">
+                                        <li>
+
+                                            <a class="dropdown-toggle" href="#" data-id="a2">
+                                                <i class="ft ftsucai-leaf"></i>
+                                                <span>通知管理</span>
+                                                <i class="ft ftsucai-139 drop-icon"></i>
+                                            </a>
+                                            <ul class="submenu">
+                                                <li>
+                                                    <a class="submenuitem" href="/notice/getUnRead"
+                                                       data-id="link1"
+                                                       data-index="1">未读通知</a>
+                                                </li>
+                                                <li>
+                                                    <a class="submenuitem" href="/notice/getReaded"
+                                                       data-id="link1"
+                                                       data-index="1">已读通知</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+
+                                    </shiro:hasRole>
+
+
+                                </shiro:hasAnyRoles>
+
+
+                                <shiro:hasRole name="doctor">
+
+                                    <li>
+                                        <a class="dropdown-toggle" href="#" data-id="a2">
+                                            <i class="ft ftsucai-UI"></i>
+                                            <span>账号管理</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem" th:href="'/account/editdoctor/'+${user.phone}"
+                                                   data-id="link1"
+                                                   data-index="1">个人信息</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+
+                                    <li>
+                                        <a class="dropdown-toggle" href="#" data-id="a3">
+                                            <i class="ft ftsucai-edit-2"></i>
+                                            <span>病例</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem"
+                                                   th:href="'/case/manage?doctorphone='+${user.phone}" data-id="link21"
+                                                   data-index="21">病例信息</a>
+                                            </li>
+                                            <li>
+                                                <a class="submenuitem"
+                                                   href="/account/gethistoryusers"
+                                                   data-id="link22"
+                                                   data-index="22">所有病人</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-toggle" href="#" data-id="a2">
+                                            <i class="ft ftsucai-ic_home"></i>
+                                            <span>住院病人</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem" href="/ward/view"
+                                                   data-id="link1"
+                                                   data-index="1">住院病人</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+
+                                        <a class="dropdown-toggle" href="#" data-id="a2">
+                                            <i class="ft ftsucai-leaf"></i>
+                                            <span>通知管理</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem" href="/notice/getUnRead"
+                                                   data-id="link1"
+                                                   data-index="1">未读通知</a>
+                                            </li>
+                                            <li>
+                                                <a class="submenuitem" href="/notice/getReaded"
+                                                   data-id="link1"
+                                                   data-index="1">已读通知</a>
+                                            </li>
+                                        </ul>
+
+
+                                </shiro:hasRole>
+
+
+                                <shiro:hasRole name="patient">
+
+
+                                    <li>
+                                        <a class="dropdown-toggle" href="#" data-id="a4">
+                                            <i class="ft ftsucai-19"></i>
+                                            <span>个人信息</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem" th:href="'/account/editpatient/'+${user.phone}"
+                                                   data-id="link31"
+                                                   data-index="31">个人信息</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-toggle" href="#" data-id="a4">
+                                            <i class="ft ftsucai-19"></i>
+                                            <span>病例</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem"
+                                                   th:href="'/case/manage?patientphone='+${user.phone}" data-id="link31"
+                                                   data-index="31">我的病例</a>
+                                            </li>
+                                            <li>
+                                                <a class="submenuitem"
+                                                   href="/account/gethistoryusers"
+                                                   data-id="link32"
+                                                   data-index="32">接诊医生</a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+
+                                    <li>
+
+                                        <a class="dropdown-toggle" href="#" data-id="a2">
+                                            <i class="ft ftsucai-leaf"></i>
+                                            <span>通知管理</span>
+                                            <i class="ft ftsucai-139 drop-icon"></i>
+                                        </a>
+                                        <ul class="submenu">
+                                            <li>
+                                                <a class="submenuitem" href="/notice/getUnRead"
+                                                   data-id="link1"
+                                                   data-index="1">未读通知</a>
+                                            </li>
+                                            <li>
+                                                <a class="submenuitem" href="/notice/getReaded"
+                                                   data-id="link1"
+                                                   data-index="1">已读通知</a>
+                                            </li>
+                                        </ul>
+                                </shiro:hasRole>
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div id="content-wrapper">
+                <div class="content-tabs" style="height:44px;border-bottom:2px solid #f0f0f0;">
+                    <button class="roll-nav roll-left tabLeft">
+                        <i class="ft ftsucai-backward2"></i>
+                    </button>
+                    <nav class="page-tabs menuTabs">
+                        <div class="page-tabs-content" style="margin-left: 0px;">
+                            <a class="menuTab active" href="javascript:;" data-id="home.html">欢迎首页</a></div>
+                    </nav>
+                    <button class="roll-nav roll-right tabRight">
+                        <i class="ft ftsucai-forward3"></i>
+                    </button>
+                    <div class="btn-group roll-nav roll-right">
+                        <button class="dropdown tabClose" data-toggle="dropdown">页签操作
+                            <i class="ft caret" style="padding-top: 3px;"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a class="tabReload" href="javascript:void(0);"><i class="ft ftsucai-spinner3"></i>刷新当前页面</a>
+                            </li>
+                            <li>
+                                <a class="tabCloseCurrent" href="javascript:void(0);"><i class="ft ftsucai-close-3"></i>关闭当前页面</a>
+                            </li>
+                            <li>
+                                <a class="tabCloseAll" href="javascript:void(0);"><i
+                                        class="ft ftsucai-77"></i>关闭全部页面</a>
+                            </li>
+                            <li>
+                                <a class="tabCloseOther" href="javascript:void(0);"><i class="ft ftsucai-120"></i>除此之外全关</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-iframe" style="background-color: #f9f9f9;">
+                    <div class="mainContent" id="content-main" style="margin: 0px; padding: 0px; height: 1050px;">
+                        <iframe name="main_iframe" width="100%" height="100%" class="main_iframe" id="default"
+                                src="/data/home" frameborder="0" data-id="home.html"></iframe>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loadingPage" style="display: none;">
+    <div class="loading-shade"></div>
+    <div class="loading-content" onClick="$.loading(false)">数据加载中，请稍后…</div>
+</div>
+
+<script src="/js/jconfirm/jquery-confirm.min.js"></script>
+<script src="/js/index/index.js"></script>
+<script src="/js/indextab.js"></script>
+<script src="/js/pace.min.js"></script>
+
+
+<!--消息提示-->
+<script src="/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/js/tips.js"></script>
+
+
+<script th:inline="javascript">
+
+
+    var user = [[${user}]];
+    var websocket = null;
+    $(function () {
+        var wsid = user.id;
+        var wsrole = user.roles[0].id;
+
+        //是医生则建立websocket链接，实时接收挂号信息
+        if (wsrole === "2") {
+
+            if ('WebSocket' in window) {
+                websocket = new WebSocket("ws:localhost:8080/websocket/" + wsid);
+            } else {
+                tips.notify("浏览器不支持websocket，不能及时接收挂号信息！", 'danger', 500);
+
+            }
+
+            //接收到消息的回调函数
+            websocket.onmessage = function (event) {
+                tips.notify("有新的挂号，请及时查看！", 'success', 5000);
+                addMessage(event.data);
+            };
+            //链接建立失败的回调函数
+            websocket.onerror = function () {
+                tips.notify("挂号系统链接失败，不能及时接收挂号信息！", 'danger', 500);
+                //  addMessage("webscoket连接失败");
+            };
+
+
+        }
+
+
+    });
+
+
+</script>
+
 </body>
 
 </html>
